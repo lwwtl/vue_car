@@ -11,8 +11,7 @@
                         用户名<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>黄金糕</el-dropdown-item>
-                        <el-dropdown-item>狮子头</el-dropdown-item>
+                        <el-dropdown-item>退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -33,11 +32,15 @@
                         :collapse-transition="false"
                         :unique-opened="true"
                         :router="true"
+                        :default-active="activePath"
                 >
                     <MenuTree :menuList="this.menuList"></MenuTree>
                 </el-menu>
             </el-aside>
-            <el-main>Main</el-main>
+            <el-main>
+                <!--路由视图-->
+                <router-view></router-view>
+            </el-main>
         </el-container>
     </el-container>
 </template>
@@ -50,6 +53,7 @@
         data(){
             return{
                 isCollapse:false,
+                activePath:'',
                 menuList:[
                     {
                         "id": 1,
@@ -64,23 +68,10 @@
                         "type": 0,
                         "children": [
                             {
-                                "id": 253,
-                                "parentId": 1,
-                                "menuName": "欢迎页面",
-                                "url": "/welcome",
-                                "icon": "el-icon-star-off",
-                                "orderNum": 1,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": "welcome:view",
-                                "type": 0,
-                                "children": []
-                            },
-                            {
                                 "id": 226,
                                 "parentId": 1,
-                                "menuName": "用户管理",
-                                "url": "/users",
+                                "menuName": "员工管理",
+                                "url": "/employee",
                                 "icon": "el-icon-user",
                                 "orderNum": 2,
                                 "open": 0,
@@ -90,67 +81,15 @@
                                 "children": []
                             },
                             {
-                                "id": 321,
+                                "id": 132,
                                 "parentId": 1,
-                                "menuName": "附件管理",
-                                "url": "/attachments",
-                                "icon": "el-icon-picture-outline",
+                                "menuName": "门店管理",
+                                "url": "/store",
+                                "icon": "el-icon-user",
                                 "orderNum": 2,
-                                "open": 1,
-                                "disabled": false,
-                                "perms": "",
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 4,
-                                "parentId": 1,
-                                "menuName": "菜单权限",
-                                "url": "/menus",
-                                "icon": "el-icon-help",
-                                "orderNum": 3,
                                 "open": 0,
                                 "disabled": false,
                                 "perms": null,
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 235,
-                                "parentId": 1,
-                                "menuName": "角色管理",
-                                "url": "/roles",
-                                "icon": "el-icon-postcard",
-                                "orderNum": 3,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": "",
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 261,
-                                "parentId": 1,
-                                "menuName": "部门管理",
-                                "url": "/departments",
-                                "icon": "el-icon-s-home",
-                                "orderNum": 3,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": "",
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 319,
-                                "parentId": 1,
-                                "menuName": "公告管理",
-                                "url": "/notices",
-                                "icon": "el-icon-s-flag",
-                                "orderNum": 4,
-                                "open": 0,
-                                "disabled": true,
-                                "perms": "",
                                 "type": 0,
                                 "children": []
                             }
@@ -171,7 +110,7 @@
                             {
                                 "id": 229,
                                 "parentId": 312,
-                                "menuName": "物资管理",
+                                "menuName": "租赁业务管理",
                                 "url": "",
                                 "icon": "el-icon-date",
                                 "orderNum": 1,
@@ -183,8 +122,8 @@
                                     {
                                         "id": 230,
                                         "parentId": 229,
-                                        "menuName": "物资入库",
-                                        "url": "/inStocks",
+                                        "menuName": "订单管理",
+                                        "url": "/orderDetail",
                                         "icon": "el-icon-date",
                                         "orderNum": 1,
                                         "open": 1,
@@ -196,7 +135,7 @@
                                     {
                                         "id": 267,
                                         "parentId": 229,
-                                        "menuName": "物资资料",
+                                        "menuName": "车辆续租",
                                         "url": "/products",
                                         "icon": "el-icon-goods",
                                         "orderNum": 2,
@@ -209,7 +148,7 @@
                                     {
                                         "id": 268,
                                         "parentId": 229,
-                                        "menuName": "物资类别",
+                                        "menuName": "车辆入库",
                                         "url": "/productCategorys",
                                         "icon": "el-icon-star-off",
                                         "orderNum": 2,
@@ -222,24 +161,11 @@
                                     {
                                         "id": 270,
                                         "parentId": 229,
-                                        "menuName": "物资发放",
+                                        "menuName": "车辆出库",
                                         "url": "/outStocks",
                                         "icon": "el-icon-goods",
                                         "orderNum": 5,
                                         "open": 1,
-                                        "disabled": false,
-                                        "perms": "",
-                                        "type": 0,
-                                        "children": []
-                                    },
-                                    {
-                                        "id": 316,
-                                        "parentId": 229,
-                                        "menuName": "物资库存",
-                                        "url": "/stocks",
-                                        "icon": "el-icon-tickets",
-                                        "orderNum": 5,
-                                        "open": 0,
                                         "disabled": false,
                                         "perms": "",
                                         "type": 0,
@@ -250,7 +176,7 @@
                             {
                                 "id": 311,
                                 "parentId": 312,
-                                "menuName": "物资流向",
+                                "menuName": "车辆服务管理",
                                 "url": null,
                                 "icon": "el-icon-edit",
                                 "orderNum": 3,
@@ -262,7 +188,7 @@
                                     {
                                         "id": 310,
                                         "parentId": 311,
-                                        "menuName": "物资去处",
+                                        "menuName": "事故管理",
                                         "url": "/consumers",
                                         "icon": "el-icon-edit",
                                         "orderNum": 1,
@@ -273,10 +199,49 @@
                                         "children": []
                                     },
                                     {
-                                        "id": 269,
+                                        "id": 249,
                                         "parentId": 311,
-                                        "menuName": "物资来源",
+                                        "menuName": "违章管理",
                                         "url": "/suppliers",
+                                        "icon": "el-icon-coordinate",
+                                        "orderNum": 5,
+                                        "open": 0,
+                                        "disabled": false,
+                                        "perms": "",
+                                        "type": 0,
+                                        "children": []
+                                    },
+                                    {
+                                        "id": 569,
+                                        "parentId": 311,
+                                        "menuName": "维修管理",
+                                        "url": "/weizhang",
+                                        "icon": "el-icon-coordinate",
+                                        "orderNum": 5,
+                                        "open": 0,
+                                        "disabled": false,
+                                        "perms": "",
+                                        "type": 0,
+                                        "children": []
+                                    },
+                                    {
+                                        "id": 669,
+                                        "parentId": 311,
+                                        "menuName": "保养管理",
+                                        "url": "/baoyan",
+                                        "icon": "el-icon-coordinate",
+                                        "orderNum": 5,
+                                        "open": 0,
+                                        "disabled": false,
+                                        "perms": "",
+                                        "type": 0,
+                                        "children": []
+                                    },
+                                    {
+                                        "id": 279,
+                                        "parentId": 311,
+                                        "menuName": "加油管理",
+                                        "url": "/jiayou",
                                         "icon": "el-icon-coordinate",
                                         "orderNum": 5,
                                         "open": 0,
@@ -292,73 +257,20 @@
                     {
                         "id": 303,
                         "parentId": 0,
-                        "menuName": "健康报备",
-                        "url": "",
+                        "menuName": "车辆管理",
+                        "url": "/car",
                         "icon": "el-icon-platform-eleme",
-                        "orderNum": 3,
+                        "orderNum": 1,
                         "open": 0,
                         "disabled": false,
                         "perms": "",
                         "type": 0,
-                        "children": [
-                            {
-                                "id": 273,
-                                "parentId": 303,
-                                "menuName": "全国疫情",
-                                "url": "/map",
-                                "icon": "el-icon-s-opportunity",
-                                "orderNum": 1,
-                                "open": 1,
-                                "disabled": false,
-                                "perms": "map:view",
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 304,
-                                "parentId": 303,
-                                "menuName": "健康打卡",
-                                "url": "/health",
-                                "icon": "el-icon-s-cooperation",
-                                "orderNum": 1,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": "",
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 305,
-                                "parentId": 303,
-                                "menuName": "查看情况",
-                                "url": null,
-                                "icon": "el-icon-c-scale-to-original",
-                                "orderNum": 2,
-                                "open": 1,
-                                "disabled": false,
-                                "perms": null,
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 272,
-                                "parentId": 303,
-                                "menuName": "疫情辟谣",
-                                "url": "/rumors",
-                                "icon": "el-icon-help",
-                                "orderNum": 5,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": null,
-                                "type": 0,
-                                "children": []
-                            }
-                        ]
+                        "children": []
                     },
                     {
                         "id": 295,
                         "parentId": 0,
-                        "menuName": "其他管理",
+                        "menuName": "财务管理",
                         "url": "",
                         "icon": "el-icon-s-marketing",
                         "orderNum": 5,
@@ -368,36 +280,9 @@
                         "type": 0,
                         "children": [
                             {
-                                "id": 297,
-                                "parentId": 295,
-                                "menuName": "监控管理",
-                                "url": "",
-                                "icon": "el-icon-warning",
-                                "orderNum": 1,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": "",
-                                "type": 0,
-                                "children": [
-                                    {
-                                        "id": 298,
-                                        "parentId": 297,
-                                        "menuName": "SQL监控",
-                                        "url": "/druid",
-                                        "icon": "el-icon-view",
-                                        "orderNum": 1,
-                                        "open": 0,
-                                        "disabled": false,
-                                        "perms": null,
-                                        "type": 0,
-                                        "children": []
-                                    }
-                                ]
-                            },
-                            {
                                 "id": 341,
                                 "parentId": 295,
-                                "menuName": "个人博客",
+                                "menuName": "账单管理",
                                 "url": "/blog",
                                 "icon": "el-icon-view",
                                 "orderNum": 1,
@@ -410,26 +295,13 @@
                             {
                                 "id": 296,
                                 "parentId": 295,
-                                "menuName": "swagger文档",
+                                "menuName": "发票开具",
                                 "url": "/swagger",
                                 "icon": "el-icon-document",
                                 "orderNum": 2,
                                 "open": 0,
                                 "disabled": false,
                                 "perms": null,
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 318,
-                                "parentId": 295,
-                                "menuName": "图标管理",
-                                "url": "/icons",
-                                "icon": "el-icon-star-off",
-                                "orderNum": 2,
-                                "open": 1,
-                                "disabled": false,
-                                "perms": "",
                                 "type": 0,
                                 "children": []
                             }
@@ -533,15 +405,12 @@
     /*主体*/
     .el-main {
         background-color: #E9EEF3;
-        color: #333;
-        text-align: center;
-        line-height: 160px;
     }
 
     /*下拉菜单*/
     .el-dropdown-link {
         cursor: pointer;
-        color: #409EFF;
+        color: #FFFFFF;
     }
     .el-icon-arrow-down {
         font-size: 12px;

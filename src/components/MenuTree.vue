@@ -14,6 +14,7 @@
                     :index="item.url+''"
                     :route="item.url+''"
                     :key="item.id"
+                    @click="savePath(item.url)"
             >
                 <i :class="item.icon"></i>
                 <span slot="title">{{ item.menuName }}</span>
@@ -25,7 +26,14 @@
 <script>
     export default {
         name: "MenuTree",
-        props:['menuList']
+        props:['menuList'],
+        methods:{
+            savePath(path){
+                window.sessionStorage.setItem("activePath",path);
+                //显示当前点击的页面
+                this.activePath = path;
+            }
+        }
     }
 </script>
 
