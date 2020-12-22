@@ -19,7 +19,7 @@
                     <el-input clearable v-model="formInline.storeName" placeholder="请输入门店名"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
+                    <el-button icon="e  l-icon-search" @click="onSubmit">查询</el-button>
                 </el-form-item>
                 <el-button type="primary" icon="el-icon-circle-plus-outline">添加门店</el-button>
             </el-form>

@@ -10,17 +10,17 @@
         <!--表单-->
             <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label-width="0px" class="login_Form">
                 <el-form-item prop="username">
-                    <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid" placeholder="帐号"></el-input>
+                    <el-input v-model="loginForm.account" prefix-icon="el-icon-user-solid" placeholder="帐号"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" placeholder="密码"></el-input>
                 </el-form-item>
-                <el-form-item prop="verifyCode">
-                    <div class="verifyCode_box">
-                    <el-input v-model="loginForm.verifyCode" prefix-icon="el-icon-key" class="verify_code" placeholder="验证码"></el-input>
-                    <img src="../assets/img/verifyCode.jpg" class="verifyCode_img">
-                    </div>
-                </el-form-item>
+<!--                <el-form-item prop="verifyCode">-->
+<!--                    <div class="verifyCode_box">-->
+<!--                    <el-input v-model="loginForm.verifyCode" prefix-icon="el-icon-key" class="verify_code" placeholder="验证码"></el-input>-->
+<!--                    <img src="../assets/img/verifyCode.jpg" class="verifyCode_img">-->
+<!--                    </div>-->
+<!--                </el-form-item>-->
 
                 <el-form-item class="login_btn">
                     <el-button type="primary" @click="submitForm('loginForm')">立即创建</el-button>
@@ -36,14 +36,14 @@
         data() {
             return {
                 loginForm: {
-                    username: '',
+                    account: '',
                     password: '',
-                    verifyCode:''
+                    // verifyCode:''
                 },
                 loginRules: {
-                    username: [
+                    account: [
                         { required: true, message: '请输入帐号', trigger: 'blur' },
-                        { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
+                        { min: 2, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
                     ],
                     password: [
                         { required: true, message: '请输入密码', trigger: 'blur' },
@@ -58,9 +58,15 @@
         },
         methods: {
             submitForm(formName) {
+                const _this = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        this.$router.push("/main");
+                        this.$axios.post('login',this.loginForm).then((res)=>{
+                            const token = res.headers['authorization']
+                            _this.$store.commit('SET_TOKEN', token)
+                            _this.$store.commit('SET_USERINFO', res.data.data)
+                            _this.$router.push("/main")
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

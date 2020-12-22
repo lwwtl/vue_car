@@ -8,10 +8,12 @@
             <div class="right_box">
                 <el-dropdown>
                     <span class="el-dropdown-link">
-                        用户名<i class="el-icon-arrow-down el-icon--right"></i>
+                        {{user.name}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>退出登录</el-dropdown-item>
+                        <el-dropdown-item v-show="hasLogin">
+                            <el-link :underline="false" @click="logout">退出登录</el-link>
+                        </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -26,8 +28,6 @@
                 <el-menu
                         default-active="2"
                         class="el-menu-vertical-demo"
-                        @open="handleOpen"
-                        @close="handleClose"
                         :collapse="isCollapse"
                         :collapse-transition="false"
                         :unique-opened="true"
@@ -54,6 +54,11 @@
             return{
                 isCollapse:false,
                 activePath:'',
+                user:{
+                    name:'',
+                    role:''
+                },
+                hasLogin:false,
                 menuList:[
                     {
                         "id": 1,
@@ -102,7 +107,7 @@
                         "url": null,
                         "icon": "el-icon-s-goods",
                         "orderNum": 2,
-                        "open": 0,
+                        "open": 1,
                         "disabled": false,
                         "perms": null,
                         "type": 0,
@@ -126,7 +131,7 @@
                                         "url": "/orderDetail",
                                         "icon": "el-icon-date",
                                         "orderNum": 1,
-                                        "open": 1,
+                                        "open": 0,
                                         "disabled": false,
                                         "perms": "el-icon-date",
                                         "type": 0,
@@ -165,7 +170,7 @@
                                         "url": "/outStocks",
                                         "icon": "el-icon-goods",
                                         "orderNum": 5,
-                                        "open": 1,
+                                        "open": 0,
                                         "disabled": false,
                                         "perms": "",
                                         "type": 0,
@@ -180,7 +185,7 @@
                                 "url": null,
                                 "icon": "el-icon-edit",
                                 "orderNum": 3,
-                                "open": 0,
+                                "open": 1,
                                 "disabled": false,
                                 "perms": null,
                                 "type": 0,
@@ -274,7 +279,7 @@
                         "url": "",
                         "icon": "el-icon-s-marketing",
                         "orderNum": 5,
-                        "open": 0,
+                        "open": 1,
                         "disabled": false,
                         "perms": "",
                         "type": 0,
@@ -314,7 +319,7 @@
                         "url": "/logs",
                         "icon": "el-icon-camera",
                         "orderNum": 6,
-                        "open": 0,
+                        "open": 1,
                         "disabled": false,
                         "perms": null,
                         "type": 0,
@@ -356,7 +361,27 @@
         methods:{
             toggleCollapse(){
                 this.isCollapse = !this.isCollapse;
+            },logout(){
+                const _this = this
+                this.$axios.get("/logout",{
+                    headers:{
+                        "Authorization":localStorage.getItem("token")
+                    }
+                }).then(res=>{
+                    _this.$store.commit("REMOVE_INFO")
+                    _this.$router.push("/login")
+                })
             }
+        },created() {
+            if(this.$store.getters.getUser.name){
+                this.user.name = this.$store.getters.getUser.name
+                this.user.role = this.$store.getters.getUser.role
+                this.hasLogin = true
+            }
+            if(this.user.role == '员工'){
+                this.menuList[0].disabled=true;
+            }
+
         }
     }
 </script>

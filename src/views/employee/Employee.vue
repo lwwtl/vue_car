@@ -9,75 +9,79 @@
         <!--用户列表卡片-->
         <el-card class="box-card">
             <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                <el-form-item label="食物">
-                <el-select v-model="formInline.food" placeholder="请选择">
-                    <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
+                <el-form-item label="姓名">
+                    <el-input clearable v-model="formInline.name" placeholder="请输入姓名"></el-input>
                 </el-form-item>
-<!--                <el-form-item label="活动区域">-->
-<!--                    <el-select v-model="formInline.region" placeholder="活动区域">-->
-<!--                        <el-option label="区域一" value="shanghai"></el-option>-->
-<!--                        <el-option label="区域二" value="beijing"></el-option>-->
-<!--                    </el-select>-->
-<!--                </el-form-item>-->
-                <el-form-item label="用户名">
-                    <el-input clearable v-model="formInline.user" placeholder="请输入用户名"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱">
-                    <el-input clearable v-model="formInline.email" placeholder="请输入邮箱"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱">
-                    <el-input clearable v-model="formInline.email" placeholder="请输入邮箱"></el-input>
+                <el-form-item label="电话">
+                    <el-input clearable v-model="formInline.mobile" placeholder="请输入电话"></el-input>
                 </el-form-item>
                 <!--加上clearable和上一行对齐-->
-                <el-form-item label="邮箱">
-                    <el-input clearable v-model="formInline.email" placeholder="请输入邮箱"></el-input>
+                <el-form-item>
+                    <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="onSubmit">查询</el-button>
+                    <el-button type="primary" icon="el-icon-plus" @click="dialogFormVisible = true">添加</el-button>
                 </el-form-item>
-                <el-button>默认按钮</el-button>
-                <el-button icon="el-icon-refresh">重置</el-button>
-                <el-button type="primary" icon="el-icon-search">搜索</el-button>
-                <el-button type="info">信息按钮</el-button>
-                <el-button type="warning">警告按钮</el-button>
-                <el-button type="danger">危险按钮</el-button>
             </el-form>
+            <!--添加对话框-->
+            <el-dialog  title="添加员工" :visible.sync="dialogFormVisible" width="50%" >
+                <el-form :model="editForm"
+                         ref="editForm"
+                         label-width="80px"
+                         :inline="true"
+                         class="demo-form-inline"
+                         :rules=null
+                >
+                    <el-form-item label="帐号" >
+                        <el-input v-model="editForm.account" style="width: 120px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" >
+                        <el-input v-model="editForm.password" style="width: 120px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="姓名" >
+                        <el-input v-model="editForm.name" style="width: 120px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="性别" >
+                        <el-input v-model="editForm.gender" style="width: 120px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="年龄" >
+                        <el-input v-model="editForm.age" style="width: 120px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="电话" >
+                        <el-input v-model="editForm.tel" style="width: 120px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="住址" >
+                        <el-input v-model="editForm.address" style="width: 120px"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="submitForm()">确 定</el-button>
+                </div>
+            </el-dialog>
             <!--表格显示-->
             <el-table
-                    :data="tableData"
-                    border
-                    style="width: 100%;height: 400px">
-                <el-table-column
-                        prop="date"
-                        label="日期"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="姓名"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="address"
-                        label="地址">
-                </el-table-column>
+                    :data="employeeList"
+                    style="width: 100%;height: 100%">
+                <el-table-column prop="account" label="员工帐号" ></el-table-column>
+                <el-table-column prop="name" label="姓名" ></el-table-column>
+                <el-table-column prop="gender" label="性别"></el-table-column>
+                <el-table-column prop="age" label="年龄" ></el-table-column>
+                <el-table-column prop="mobile" label="电话" ></el-table-column>
+                <el-table-column prop="address" label="住址" ></el-table-column>
+                <el-table-column prop="lastTime" label="上次登录" ></el-table-column>
+
             </el-table>
             <!--分页区域-->
             <el-pagination
                     style="padding-top: 20px"
                     @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage4"
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
+                    @current-change="page"
+                    :current-page=currentPage
+                    :page-size=pageSize
+                    :page-sizes="[5, 10, 15, 20]"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
+                    :total="total">
             </el-pagination>
         </el-card>
     </div>
@@ -85,48 +89,42 @@
 
 <script>
     export default {
+        inject:['reload'],
         name: "Employee",
         data() {
             return {
                 formInline: {
-                    user: '',
-                    email: '',
+                    name: '',
+                    mobile: '',
                     food:''
                 },
-                currentPage4: 4,
-                options: [{
-                    value: '选项1',
-                    label: '黄金糕'
-                }, {
-                    value: '选项2',
-                    label: '双皮奶'
-                }, {
-                    value: '选项3',
-                    label: '蚵仔煎'
-                }, {
-                    value: '选项4',
-                    label: '龙须面'
-                }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }]
+                currentPage: 1,
+                total: 0,
+                pageSize: 5,
+                employeeList: [],
+                /*添加对话框*/
+                dialogFormVisible: false,
+                editForm: {
+                    id:null,
+                    account: '',
+                    password: '',
+                    name: '',
+                    gender: '',
+                    age: '',
+                    mobile: '',
+                    address: ''
+                },
+                editFormRules: {
+                    id: [{ required: true, message: "不能为空", trigger: "blur" }],
+                    account: [{ required: true, message: "不能为空", trigger: "blur" }],
+                    password: [{ required: true, message: "不能为空", trigger: "blur" }],
+                    name: [{ required: true, message: "不能为空", trigger: "blur" }],
+                    gender: [{ required: true, message: "不能为空", trigger: "blur" }],
+                    age: [{ required: true, message: "不能为空", trigger: "blur" }],
+                    mobile: [{ required: true, message: "不能为空", trigger: "blur" }],
+                    address: [{ required: true, message: "不能为空", trigger: "blur" }],
+                }, //添加表单验证规则
+                /*添加对话框*/
             }
         },
         methods: {
@@ -135,10 +133,45 @@
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
+                this.pageSize=val;
+                this.page(this.currentPage);
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
-            }
+            page(currentPage) {
+                const _this = this
+                _this.$axios.get("/employee/list?currentPage=" + currentPage+"&pageSize="+ this.pageSize).then(res => {
+                    console.log(res)
+                    _this.employeeList = res.data.data.records
+                    _this.currentPage = res.data.data.current
+                    _this.total = res.data.data.total
+                    _this.pageSize = res.data.data.size
+
+                })
+            },
+            submitForm() {
+                const _this = this
+                this.$refs.editForm.validate((valid) => {
+                    if (valid) {
+                        this.$axios.post('/employee/add', this.editForm, {
+                            headers: {
+                                "Authorization": localStorage.getItem("token")
+                            }
+                        }).then((res) => {
+                            _this.$alert('操作成功', '提示', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    _this.reload()
+                                }
+                            });
+                        });
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                })
+            },
+        },
+        created() {
+            this.page(1)
         }
     }
 </script>
