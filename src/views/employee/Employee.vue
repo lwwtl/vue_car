@@ -24,40 +24,52 @@
                 </el-form-item>
             </el-form>
             <!--添加对话框-->
-            <el-dialog  title="添加员工" :visible.sync="dialogFormVisible" width="50%"  >
+            <el-dialog  title="添加员工" :visible.sync="dialogFormVisible" width="50%"  :before-close="handleClose" >
                 <el-form :model="editForm"
                          ref="editForm"
                          label-width="80px"
                          :inline="true"
                          class="demo-form-inline"
-                         :rules=null
+                         :rules=editFormRules
+
                 >
-                    <el-form-item label="帐号" >
-                        <el-input v-model="editForm.account" style="width: 120px"></el-input>
+                    <!--form-item需要添加prop属性，对应Model,否则清除表单无效-->
+                    <el-form-item label="帐号" prop="account">
+                        <el-input v-model="editForm.account"  style="width: 150px"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码" >
-                        <el-input v-model="editForm.password" style="width: 120px" show-password></el-input>
+                    <el-form-item label="密码" prop="password">
+                        <el-input v-model="editForm.password" style="width: 150px" show-password></el-input>
                     </el-form-item>
-                    <el-form-item label="姓名" >
-                        <el-input v-model="editForm.name" style="width: 120px"></el-input>
+                    <el-form-item label="姓名" prop="name">
+                        <el-input v-model="editForm.name" style="width: 150px"></el-input>
                     </el-form-item>
-                    <el-form-item label="性别" >
-                        <el-input v-model="editForm.gender" style="width: 120px"></el-input>
+                    <el-form-item label="性别" prop="gender">
+                        <div style="width: 150px">
+                            <el-radio v-model="editForm.gender" label="1">男</el-radio>
+                            <el-radio v-model="editForm.gender" label="0" style="padding-left: 28px">女</el-radio>
+                        </div>
                     </el-form-item>
-                    <el-form-item label="年龄" >
-                        <el-input v-model="editForm.age" style="width: 120px"></el-input>
+<!--                    <el-form-item label="性别" prop="gender">-->
+<!--                        <el-input v-model="editForm.gender" style="width: 120px"></el-input>-->
+<!--                    </el-form-item>-->
+                    <el-form-item label="年龄" prop="age">
+                        <el-input v-model="editForm.age" style="width: 150px"></el-input>
                     </el-form-item>
-                    <el-form-item label="电话" >
-                        <el-input v-model="editForm.mobile" style="width: 120px"></el-input>
+                    <el-form-item label="电话" prop="mobile">
+                        <el-input v-model="editForm.mobile" style="width: 150px"></el-input>
                     </el-form-item>
-                    <el-form-item label="住址" >
-                        <el-input v-model="editForm.address" style="width: 120px"></el-input>
+                    <el-form-item label="角色" prop="role">
+                        <div style="width: 150px">
+                            <el-radio v-model="editForm.role" label="a">管理员</el-radio>
+                            <el-radio v-model="editForm.role" label="e">员工</el-radio>
+                        </div>
                     </el-form-item>
-                    <el-form-item label="角色" >
-                        <el-input v-model="editForm.role" style="width: 120px"></el-input>
+                    <el-form-item label="住址" prop="address">
+                        <el-input v-model="editForm.address" style="width: 390px"></el-input>
                     </el-form-item>
+
                 </el-form>
-                <div slot="footer" class="dialog-footer">
+                <div slot="footer" class="dialog-footer" style="text-align: center">
                     <el-button @click="callOf()">取 消</el-button>
                     <el-button type="primary" @click="submitForm()">确 定</el-button>
                 </div>
@@ -66,10 +78,10 @@
             <el-table
                     :data="employeeList"
                     style="width: 100%;height: 100%">
-                <el-table-column prop="role" label="角色" ></el-table-column>
+                <el-table-column prop="role" :formatter="showRole" label="角色" ></el-table-column>
                 <el-table-column prop="account" label="员工帐号" ></el-table-column>
                 <el-table-column prop="name" label="姓名" ></el-table-column>
-                <el-table-column prop="gender" label="性别"></el-table-column>
+                <el-table-column prop="gender" :formatter="showGender"  label="性别"></el-table-column>
                 <el-table-column prop="age" label="年龄" ></el-table-column>
                 <el-table-column prop="mobile" label="电话" ></el-table-column>
                 <el-table-column prop="address" label="住址" ></el-table-column>
@@ -127,14 +139,23 @@
                     role:''
                 },
                 editFormRules: {
-                    id: [{ required: true, message: "不能为空", trigger: "blur" }],
-                    account: [{ required: true, message: "不能为空", trigger: "blur" }],
-                    password: [{ required: true, message: "不能为空", trigger: "blur" }],
-                    name: [{ required: true, message: "不能为空", trigger: "blur" }],
-                    gender: [{ required: true, message: "不能为空", trigger: "blur" }],
-                    age: [{ required: true, message: "不能为空", trigger: "blur" }],
-                    mobile: [{ required: true, message: "不能为空", trigger: "blur" }],
-                    address: [{ required: true, message: "不能为空", trigger: "blur" }],
+                    account: [
+                        { required: true, message: "不能为空", trigger: "blur" },
+                        { min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur' }
+                        ],
+                    password: [
+                        { required: true, message: "不能为空", trigger: "blur" },
+                        { min: 3, max: 32, message: '长度在 3 到 32 个字符', trigger: 'blur' }
+                        ],
+                    name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+                    gender: [{ required: true, message: "性别不能为空", trigger: "blur" }],
+                    age: [{ required: true, message: "年龄不能为空", trigger: "blur" }],
+                    mobile: [
+                        { required: true, message: "手机号码不能为空", trigger: "blur" },
+                        { min: 11, max: 11, message: '手机号码长度为11位', trigger: 'blur' }
+                    ],
+                    address: [{ required: true, message: "地址不能为空", trigger: "blur" }],
+                    role: [{ required: true, message: "角色不能为空", trigger: "blur" }],
                 }, //添加表单验证规则
                 /*添加对话框*/
             }
@@ -144,17 +165,17 @@
                 this.page(this.currentPage)
             },
             callOf(){
-                this.dialogFormVisible = false;
                 this.$refs.editForm.resetFields();
+                this.dialogFormVisible = false;
             },
-            // closeDialog(done){
-            //     this.$confirm('确认关闭？')
-            //         .then(_ => {
-            //             done();
-            //             location.reload();
-            //         })
-            //         .catch(_ => { });
-            // },
+            handleClose(done) {
+                this.$confirm('关闭窗口不会保留之前编辑操作，确认关闭？')
+                    .then(_ => {
+                        this.$refs.editForm.resetFields();
+                        done();
+                    })
+                    .catch(_ => {});
+            },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
                 this.pageSize=val;
@@ -170,6 +191,12 @@
                     _this.pageSize = res.data.data.size
 
                 })
+            },
+            showGender(row) {
+                return row.gender == 1 ? "男" : "女";
+            },
+            showRole(row) {
+                return row.role == "a" ? "管理员" : "员工";
             },
             submitForm() {
                 const _this = this
@@ -200,16 +227,7 @@
                 this.dialogFormVisible = true
                 this.$axios.get('/employee/find/' + id).then((res) => {
                         const emp = res.data.data
-                        _this.editForm.id = emp.id
-                        _this.editForm.account = emp.account
-                        _this.editForm.password = emp.password
-                        _this.editForm.name = emp.name
-                        _this.editForm.gender = emp.gender
-                        _this.editForm.age = emp.age
-                        _this.editForm.address = emp.address
-                        _this.editForm.mobile = emp.mobile
-                        _this.editForm.role = emp.role
-
+                        _this.editForm = emp
                     });
             },
             del(id){

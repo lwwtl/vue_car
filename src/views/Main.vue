@@ -378,7 +378,7 @@
                 this.user.role = this.$store.getters.getUser.role
                 this.hasLogin = true
             }
-            if(this.user.role == '员工'){
+            if(this.user.role == 'e'){
                 this.menuList[0].disabled=true;
             }
 
