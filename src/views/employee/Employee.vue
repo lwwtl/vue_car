@@ -202,17 +202,15 @@
                 const _this = this
                 this.$refs.editForm.validate((valid) => {
                     if (valid) {
-                        this.$axios.post('/employee/add', this.editForm, {
+                        this.$axios.post('/employee/edit', this.editForm, {
                             headers: {
                                 "Authorization": localStorage.getItem("token")
                             }
                         }).then((res) => {
-                            _this.$alert('操作成功', '提示', {
-                                confirmButtonText: '确定',
-                                cancelButtonText: '取消',
-                                callback: action => {
-                                    _this.reload()
-                                }
+                            _this.reload()
+                            this.$message({
+                                message: '操作成功',
+                                type: 'success'
                             });
                         });
                     } else {
@@ -233,26 +231,27 @@
             del(id){
                 console.log(id)
                 const _this = this
-                if(this.$store.getters.getUser.id==id){
-                    this.$confirm('不能删除当前登录用户!', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    })
-                }else{
-                    this.$axios.get('/employee/del/'+id, {
-                        headers: {
-                            "Authorization": localStorage.getItem("token")
-                        }
-                    }).then((res) => {
-                        _this.$alert('操作成功', '提示', {
-                            confirmButtonText: '确定',
-                            callback: action => {
+                this.$confirm('确认删除？')
+                    .then(_ => {
+                        if (this.$store.getters.getUser.id == id) {
+                            this.$message({
+                                message: '不能删除当前登录用户！',
+                                type: 'warning'
+                            });
+                        } else {
+                            this.$axios.get('/employee/del/' + id, {
+                                headers: {
+                                    "Authorization": localStorage.getItem("token")
+                                }
+                            }).then((res) => {
                                 _this.reload()
-                            }
-                        });
-                    });
-                }
+                                this.$message({
+                                    message: '删除成功',
+                                    type: 'success'
+                                });
+                            });
+                        }
+                    })
             }
         },
         created() {
