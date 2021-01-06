@@ -22,13 +22,10 @@
                             style="width: 300px;"
                     ></el-cascader>
                 </el-form-item>
-<!--                <el-form-item label="省市区">-->
-<!--                    <el-input clearable v-model="searchInCondition.address" placeholder="请选择省市区"></el-input>-->
-<!--                </el-form-item>-->
                 <el-form-item>
                     <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
                 </el-form-item>
-                <el-button type="primary" icon="el-icon-plus"  @click="dialogFormVisible=true">添加车辆</el-button>
+                <el-button type="primary" icon="el-icon-plus"  @click="dialogFormVisible=true">新增门店</el-button>
             </el-form>
             <!--添加对话框-->
             <el-dialog  title="添加车辆" :visible.sync="dialogFormVisible" width="55%"  :before-close="handleClose" >

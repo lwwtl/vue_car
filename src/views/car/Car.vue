@@ -14,6 +14,15 @@
                 <el-form-item label="车名">
                     <el-input clearable v-model="searchInCondition.name" placeholder="请输入名称"></el-input>
                 </el-form-item>
+                <el-form-item label="省市区">
+                    <el-cascader
+                            v-model="value"
+                            :options="options"
+                            @change="handleChange"
+                            clearable
+                            style="width: 230px"
+                    ></el-cascader>
+                </el-form-item>
                 <el-form-item>
                     <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
                 </el-form-item>
@@ -72,11 +81,12 @@
                             <el-option
                                     v-for="item in options_type"
                                     :key="item.value_type"
-                                    :label="item.value_type"
+                                    :label="item.label"
                                     :value="item.value_type">
                             </el-option>
                         </el-select>
                     </el-form-item>
+
                     <el-form-item label="车辆状态" prop="state">
                         <div style="width: 180px">
                             <el-radio v-model="editForm.state" label="已出库">已出库</el-radio>
@@ -87,7 +97,7 @@
 <!--                        <el-input v-model="editForm.store" style="width: 390px"></el-input>-->
 <!--                    </el-form-item>-->
                     <div class="block">
-                        <el-form-item label="所属门店" prop="store">
+                        <el-form-item label="省市区" prop="region">
                         <el-cascader
                                 v-model="value"
                                 :options="options"
@@ -97,6 +107,20 @@
                         ></el-cascader>
                         </el-form-item>
                     </div>
+                    <el-form-item label="所属门店" prop="store">
+                        <el-select
+                                v-model="value_store"
+                                clearable
+                                @visible-change="beforeChoose"
+                                placeholder="请选择门店">
+                            <el-option
+                                    v-for="item in storeList"
+                                    :key="item.name"
+                                    :label="item.name"
+                                    :value="item.name">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <div style="padding-left: 80px">
                         <el-upload
                                 class="avatar-uploader"
@@ -145,6 +169,9 @@
                             <el-form-item label="座 位">
                                 <span>{{ props.row.seat }} 座</span>
                             </el-form-item>
+                            <el-form-item label="省市区">
+                                <span>{{ props.row.region }}</span>
+                            </el-form-item>
                             <el-form-item label="所属门店">
                                 <span>{{ props.row.store }}</span>
                             </el-form-item>
@@ -191,7 +218,8 @@
             return {
                 searchInCondition: {
                     no: '',
-                    name:''
+                    name:'',
+                    region:''
                 },
                 /*分页参数*/
                 currentPage: 1,
@@ -223,7 +251,11 @@
                     label: '电动型'
                 }],
                 value_type:[],
-                // 门店级联选择
+                // 门店选择
+               // region:'',
+                storeList:[],
+                value_store:[],
+                // 省市区级联选择
                 value: [],
                 options: [{
                     value: '福建省',
@@ -233,96 +265,29 @@
                         label: '福州市',
                         children: [{
                             value: '机场火车站',
-                            label: '机场火车站',
-                            children:[{
-                                value:'福州机场店',
-                                label:'福州机场店'
-                            },{
-                                value:'福州高铁南站便捷点',
-                                label:'福州高铁南站便捷点'
-                            },{
-                                value:'福州火车站便捷点',
-                                label:'福州火车站便捷点'
-                            },{
-                                value:'永泰站便捷点',
-                                label:'永泰站便捷点'
-                            }]
+                            label: '机场火车站'
                         }, {
                             value: '仓山区',
-                            label: '仓山区',
-                            children:[{
-                                value:'金山大道店',
-                                label:'金山大道店'
-                            },{
-                                value:'则徐大道店',
-                                label:'则徐大道店'
-                            },{
-                                value:'白湖亭店',
-                                label:'白湖亭店'
-                            },{
-                                value:'华夏汽车城',
-                                label:'华夏汽车城'
-                            }]
+                            label: '仓山区'
                         }, {
                             value: '晋安区',
-                            label: '晋安区',
-                            children:[{
-                                value:'丰泽元便捷点',
-                                label:'丰泽元便捷点'
-                            },{
-                                value:'省彩印厂便捷点',
-                                label:'省彩印厂便捷点'
-                            }]
+                            label: '晋安区'
                         }, {
                             value: '闽侯县',
-                            label: '闽侯县',
-                            children:[{
-                                value:'师大西门便捷点',
-                                label:'师大西门便捷点'
-                            },{
-                                value:'工程学院便捷点',
-                                label:'工程学院便捷点'
-                            }]
+                            label: '闽侯县'
                         }]
                     }, {
                         value: '厦门市',
                         label: '厦门市',
                         children: [{
                             value: '机场火车站',
-                            label: '机场火车站',
-                            children:[{
-                                value:'高崎机场T4店',
-                                label:'高崎机场T4店'
-                            },{
-                                value:'高崎机场T2店',
-                                label:'高崎机场T2店'
-                            },{
-                                value:'厦门站店',
-                                label:'厦门站店'
-                            },{
-                                value:'厦门北站店',
-                                label:'厦门北站店'
-                            }]
+                            label: '机场火车站'
                         }, {
                             value: '湖里区',
-                            label: '湖里区',
-                            children:[{
-                                value:'湖里区便捷点1',
-                                label:'湖里区便捷点1'
-                            },{
-                                value:'湖里区便捷点2',
-                                label:'湖里区便捷点2'
-                            }]
+                            label: '湖里区'
                         }, {
                             value: '翔安区',
-                            label: '翔安区',
-                            children:[{
-                                value:'翔安区便捷点1',
-                                label:'翔安区便捷点1'
-                            },{
-                                value:'翔安区便捷点2',
-                                label:'翔安区便捷点2'
-                            }]
+                            label: '翔安区'
                         }]
                     }]
                 }, {
@@ -415,7 +380,8 @@
                     rent: '',
                     img:'',
                     state: '',
-                    store: ''
+                    store: '',
+                    region:''
                 },
                 // editFormRules: {
                 //     account: [
@@ -440,19 +406,44 @@
             }
         },
         methods: {
-                handleChange() {
-                    let car_store = this.value.join('/');
-                    this.editForm.store = car_store
+            //下拉框出现时触发
+            beforeChoose(){
+                const _this = this
+                _this.$axios.post("/car/findStore?region=" + this.editForm.region).then(res => {
+                    console.log(this.editForm.region)
+                    _this.storeList = res.data.data;
+                })
+            },
+            //改变省市区的值时触发
+            handleChange() {
+                    // let car_store = this.value.join('/');
+                    // this.editForm.store = car_store
+                let car_address = this.value.join('/');
+                this.editForm.region = car_address
+                const _this = this
+                _this.$axios.post("/car/findStore?region=" + this.editForm.region).then(res => {
+                    // console.log(res)
+                    // console.log(res.data.data)
+                    //ES6
+                    // console.log(_this.storeList.map((obj)=>{return obj.name}).join(","))
+                    // _this.storeList = res.data.data
+                    _this.storeList = res.data.data;
+                    _this.value_store = '';
+                })
                 },
+            //提交查询表单
             onSubmit() {
                 console.log('submit!');
                 this.page(this.currentPage);
             },
+            //取消按钮    关闭窗口时需要置空选择器的值
             callOf(){
                 this.$refs.editForm.resetFields();
                 this.dialogFormVisible = false;
                 this.value_type = '';
                 this.imageUrl = '';
+                this.storeList = '';
+                this.value_store = '';
                 this.value = '';
             },
             handleSizeChange(val) {
@@ -460,19 +451,24 @@
                 this.pageSize=val;
                 this.page(this.currentPage);
             },
+            //点击叉叉关闭模态框   关闭窗口时需要置空选择器的值
             handleClose(done) {
                 this.$confirm('关闭窗口不会保留之前编辑操作，确认关闭？')
                     .then(_ => {
                         this.$refs.editForm.resetFields();
                         this.value_type = '';
                         this.imageUrl = '';
+                        this.storeList = '';
+                        this.value_store = '';
                         this.value = '';
                         done();
                     })
                     .catch(_ => {});
             },
+            //控制分页
             page(currentPage) {
                 const _this = this
+                this.searchInCondition.region = this.value.join('/');
                 _this.$axios.post("/car/list?currentPage=" + currentPage+"&pageSize="+ this.pageSize,this.searchInCondition).then(res => {
                     _this.carList = res.data.data.records
                     _this.currentPage = res.data.data.current
@@ -480,11 +476,14 @@
                     _this.pageSize = res.data.data.size
 
                 })
-            },submitForm() {
+            },
+            //提交表单
+            submitForm() {
                 const _this = this
                 let tag = this.value_type.join(',');
                 this.editForm.type = tag
                 this.editForm.img = this.imageUrl
+                this.editForm.store = this.value_store;
                 this.$refs.editForm.validate((valid) => {
                     if (valid) {
                         this.$axios.post('/car/edit', this.editForm, {
@@ -504,8 +503,9 @@
                     }
                 })
             },
+            //修改时回显
             find(id){
-                console.log(id)
+                //console.log(id)
                 const _this = this
                 this.dialogFormVisible = true
                 this.$axios.get('/car/find/' + id).then((res) => {
@@ -513,7 +513,8 @@
                     _this.editForm = car
                     _this.imageUrl = car.img
                     _this.value_type = car.type.split(',')
-                    _this.value = car.store.split('/')
+                    _this.value = car.region.split('/')
+                    _this.value_store = car.store
                 });
             },
             del(id) {
@@ -535,10 +536,12 @@
                     })
                     .catch(_ => {});
             },
+            //图片回显
             handleAvatarSuccess(res, file) {
                 console.log(res)
                 this.imageUrl = res.data
             },
+            //图片上传大小限制
             beforeAvatarUpload(file) {
                 const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!isLt2M) {
