@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Main from "../views/Main";
-import Employee from "../views/employee/Employee";
-import Store from "../views/store/Store";
+import Employee from "../views/system/Employee";
+import Store from "../views/system/Store";
 import OrderDetail from "../views/rent/OrderDetail";
 import Car from "../views/car/Car";
 

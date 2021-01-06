@@ -52,7 +52,7 @@
         name: "Main",
         data(){
             return{
-                isCollapse:false,
+                isCollapse:true,
                 activePath:'',
                 user:{
                     name:'',

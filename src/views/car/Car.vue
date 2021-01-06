@@ -20,7 +20,7 @@
                 <el-button type="primary" icon="el-icon-plus"  @click="dialogFormVisible=true">添加车辆</el-button>
             </el-form>
             <!--添加对话框-->
-            <el-dialog  title="添加车辆" :visible.sync="dialogFormVisible" width="50%"  :before-close="handleClose" >
+            <el-dialog  title="添加车辆" :visible.sync="dialogFormVisible" width="55%"  :before-close="handleClose" >
                 <el-form :model="editForm"
                          ref="editForm"
                          label-width="80px"
@@ -53,9 +53,15 @@
                     <el-form-item label="座位" prop="seat">
                         <el-input v-model="editForm.seat" style="width: 150px"></el-input>
                     </el-form-item>
+                    <el-form-item label="变速" prop="model">
+                        <div style="width: 178px">
+                            <el-radio v-model="editForm.model" label="手排">手排</el-radio>
+                            <el-radio v-model="editForm.model" label="自排">自排</el-radio>
+                        </div>
+                    </el-form-item>
                     <el-form-item label="类型" prop="type">
                         <el-select
-                                v-model="value"
+                                v-model="value_type"
                                 multiple
                                 filterable
                                 allow-create
@@ -64,18 +70,12 @@
                                 style="width: 390px"
                         >
                             <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
+                                    v-for="item in options_type"
+                                    :key="item.value_type"
+                                    :label="item.value_type"
+                                    :value="item.value_type">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="变速" prop="model">
-                        <div style="width: 178px">
-                            <el-radio v-model="editForm.model" label="手排">手排</el-radio>
-                            <el-radio v-model="editForm.model" label="自排">自排</el-radio>
-                        </div>
                     </el-form-item>
                     <el-form-item label="车辆状态" prop="state">
                         <div style="width: 180px">
@@ -83,9 +83,31 @@
                             <el-radio v-model="editForm.state" label="已入库">已入库</el-radio>
                         </div>
                     </el-form-item>
-                    <el-form-item label="所属门店" prop="store">
-                        <el-input v-model="editForm.store" style="width: 390px"></el-input>
-                    </el-form-item>
+<!--                    <el-form-item label="所属门店" prop="store">-->
+<!--                        <el-input v-model="editForm.store" style="width: 390px"></el-input>-->
+<!--                    </el-form-item>-->
+                    <div class="block">
+                        <el-form-item label="所属门店" prop="store">
+                        <el-cascader
+                                v-model="value"
+                                :options="options"
+                                @change="handleChange"
+                                clearable
+                                style="width: 390px"
+                        ></el-cascader>
+                        </el-form-item>
+                    </div>
+                    <div style="padding-left: 80px">
+                        <el-upload
+                                class="avatar-uploader"
+                                action="http://localhost:8888/car/upload/img"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload">
+                            <img v-if="imageUrl!=''" :src="imageUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon">上传图片</i>
+                        </el-upload>
+                    </div>
                 </el-form>
                 <div slot="footer" class="dialog-footer" style="text-align: center">
                     <el-button @click="callOf()">取 消</el-button>
@@ -134,8 +156,8 @@
                 <el-table-column label="车辆名称" prop="name">
                 </el-table-column>
                 <el-table-column label="车辆图片" prop="">
-                    <template width="200" slot-scope="scope">
-                        <img style="width:200px;border:none;" :src="scope.row.img">
+                    <template width="100" slot-scope="scope">
+                        <img style="width:100px;border:none;" :src="scope.row.img">
                     </template>
                 </el-table-column>
                 <el-table-column label="车辆状态" prop="state">
@@ -167,17 +189,6 @@
         name: "Car",
         data() {
             return {
-                options: [{
-                    value: 'HTML',
-                    label: 'HTML'
-                }, {
-                    value: 'CSS',
-                    label: 'CSS'
-                }, {
-                    value: 'JavaScript',
-                    label: 'JavaScript'
-                }],
-                value:[],
                 searchInCondition: {
                     no: '',
                     name:''
@@ -190,6 +201,206 @@
                 carList: [],
                 /*添加对话框*/
                 dialogFormVisible: false,
+                //对话框中下拉选项
+                imageUrl:'',
+                options_type: [{
+                    value_type: '经济型',
+                    label: '经济型'
+                }, {
+                    value_type: '舒适型',
+                    label: '舒适型'
+                }, {
+                    value_type: '豪华型',
+                    label: '豪华型'
+                }, {
+                    value_type: 'SUV',
+                    label: 'SUV'
+                }, {
+                    value_type: '商务型',
+                    label: '商务型'
+                }, {
+                    value_type: '电动型',
+                    label: '电动型'
+                }],
+                value_type:[],
+                // 门店级联选择
+                value: [],
+                options: [{
+                    value: '福建省',
+                    label: '福建省',
+                    children: [{
+                        value: '福州市',
+                        label: '福州市',
+                        children: [{
+                            value: '机场火车站',
+                            label: '机场火车站',
+                            children:[{
+                                value:'福州机场店',
+                                label:'福州机场店'
+                            },{
+                                value:'福州高铁南站便捷点',
+                                label:'福州高铁南站便捷点'
+                            },{
+                                value:'福州火车站便捷点',
+                                label:'福州火车站便捷点'
+                            },{
+                                value:'永泰站便捷点',
+                                label:'永泰站便捷点'
+                            }]
+                        }, {
+                            value: '仓山区',
+                            label: '仓山区',
+                            children:[{
+                                value:'金山大道店',
+                                label:'金山大道店'
+                            },{
+                                value:'则徐大道店',
+                                label:'则徐大道店'
+                            },{
+                                value:'白湖亭店',
+                                label:'白湖亭店'
+                            },{
+                                value:'华夏汽车城',
+                                label:'华夏汽车城'
+                            }]
+                        }, {
+                            value: '晋安区',
+                            label: '晋安区',
+                            children:[{
+                                value:'丰泽元便捷点',
+                                label:'丰泽元便捷点'
+                            },{
+                                value:'省彩印厂便捷点',
+                                label:'省彩印厂便捷点'
+                            }]
+                        }, {
+                            value: '闽侯县',
+                            label: '闽侯县',
+                            children:[{
+                                value:'师大西门便捷点',
+                                label:'师大西门便捷点'
+                            },{
+                                value:'工程学院便捷点',
+                                label:'工程学院便捷点'
+                            }]
+                        }]
+                    }, {
+                        value: '厦门市',
+                        label: '厦门市',
+                        children: [{
+                            value: '机场火车站',
+                            label: '机场火车站',
+                            children:[{
+                                value:'高崎机场T4店',
+                                label:'高崎机场T4店'
+                            },{
+                                value:'高崎机场T2店',
+                                label:'高崎机场T2店'
+                            },{
+                                value:'厦门站店',
+                                label:'厦门站店'
+                            },{
+                                value:'厦门北站店',
+                                label:'厦门北站店'
+                            }]
+                        }, {
+                            value: '湖里区',
+                            label: '湖里区',
+                            children:[{
+                                value:'湖里区便捷点1',
+                                label:'湖里区便捷点1'
+                            },{
+                                value:'湖里区便捷点2',
+                                label:'湖里区便捷点2'
+                            }]
+                        }, {
+                            value: '翔安区',
+                            label: '翔安区',
+                            children:[{
+                                value:'翔安区便捷点1',
+                                label:'翔安区便捷点1'
+                            },{
+                                value:'翔安区便捷点2',
+                                label:'翔安区便捷点2'
+                            }]
+                        }]
+                    }]
+                }, {
+                    value: '广东省',
+                    label: '广东省',
+                    children: [{
+                        value: '广州市',
+                        label: '广州市',
+                        children: [{
+                            value: '机场火车站',
+                            label: '机场火车站'
+                        }, {
+                            value: '白云区',
+                            label: '白云区'
+                        }, {
+                            value: '天河区',
+                            label: '天河区'
+                        }, {
+                            value: '都江区',
+                            label: '都江区'
+                        }]
+                    }]
+                    }, {
+                    value: '四川省',
+                    label: '四川省',
+                    children: [{
+                        value: '机场火车站',
+                        label: '机场火车站'
+                    }, {
+                        value: '成都市',
+                        label: '成都市'
+                    }, {
+                        value: '德阳市',
+                        label: '德阳市'
+                    }]
+                }, {
+                    value: '云南省',
+                    label: '云南省',
+                    children: [{
+                        value: '机场火车站',
+                        label: '机场火车站'
+                    }, {
+                        value: '昆明市',
+                        label: '昆明市'
+                    }, {
+                        value: '丽江市',
+                        label: '丽江市'
+                    }]
+                }, {
+                    value: '广西省',
+                    label: '广西省',
+                    children: [{
+                        value: '机场火车站',
+                        label: '机场火车站'
+                    }, {
+                        value: '南宁市',
+                        label: '南宁市'
+                    }, {
+                        value: '玉林市',
+                        label: '玉林市'
+                    }]
+                }, {
+                    value: '浙江省',
+                    label: '浙江省',
+                    children: [{
+                        value: '机场火车站',
+                        label: '机场火车站'
+                    }, {
+                        value: '杭州市',
+                        label: '杭州市'
+                    }, {
+                        value: '苏州市',
+                        label: '苏州市'
+                    }]
+                }
+                ],
+
+                //表单
                 editForm: {
                     id: '',
                     no: '',
@@ -229,6 +440,10 @@
             }
         },
         methods: {
+                handleChange() {
+                    let car_store = this.value.join('/');
+                    this.editForm.store = car_store
+                },
             onSubmit() {
                 console.log('submit!');
                 this.page(this.currentPage);
@@ -236,6 +451,9 @@
             callOf(){
                 this.$refs.editForm.resetFields();
                 this.dialogFormVisible = false;
+                this.value_type = '';
+                this.imageUrl = '';
+                this.value = '';
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
@@ -246,6 +464,9 @@
                 this.$confirm('关闭窗口不会保留之前编辑操作，确认关闭？')
                     .then(_ => {
                         this.$refs.editForm.resetFields();
+                        this.value_type = '';
+                        this.imageUrl = '';
+                        this.value = '';
                         done();
                     })
                     .catch(_ => {});
@@ -253,7 +474,6 @@
             page(currentPage) {
                 const _this = this
                 _this.$axios.post("/car/list?currentPage=" + currentPage+"&pageSize="+ this.pageSize,this.searchInCondition).then(res => {
-                    console.log(res)
                     _this.carList = res.data.data.records
                     _this.currentPage = res.data.data.current
                     _this.total = res.data.data.total
@@ -262,6 +482,9 @@
                 })
             },submitForm() {
                 const _this = this
+                let tag = this.value_type.join(',');
+                this.editForm.type = tag
+                this.editForm.img = this.imageUrl
                 this.$refs.editForm.validate((valid) => {
                     if (valid) {
                         this.$axios.post('/car/edit', this.editForm, {
@@ -288,6 +511,9 @@
                 this.$axios.get('/car/find/' + id).then((res) => {
                     const car = res.data.data
                     _this.editForm = car
+                    _this.imageUrl = car.img
+                    _this.value_type = car.type.split(',')
+                    _this.value = car.store.split('/')
                 });
             },
             del(id) {
@@ -308,6 +534,17 @@
                         });
                     })
                     .catch(_ => {});
+            },
+            handleAvatarSuccess(res, file) {
+                console.log(res)
+                this.imageUrl = res.data
+            },
+            beforeAvatarUpload(file) {
+                const isLt2M = file.size / 1024 / 1024 < 2;
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isLt2M;
             }
         },
         created() {
@@ -327,5 +564,29 @@
         margin-right: 0;
         margin-bottom: 0;
         width: 50%;
+    }
+    /*图片*/
+    .avatar-uploader/deep/ .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader/deep/ .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 18px;
+        color: #8c939d;
+        width: 138px;
+
+        line-height: 138px;
+        text-align: center;
+    }
+    .avatar {
+        width: 138px;
+
+        display: block;
     }
 </style>
