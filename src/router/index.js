@@ -6,7 +6,7 @@ import Employee from "../views/system/Employee";
 import Store from "../views/system/Store";
 import OrderDetail from "../views/rent/OrderDetail";
 import Car from "../views/car/Car";
-
+import UserInfo from "../views/user/UserInfo";
 
 Vue.use(VueRouter)
 
@@ -42,6 +42,10 @@ const router = new VueRouter({
           path:'/car',
           name:'Car',
           component:Car
+        },{
+          path:'/userInfo',
+          name:'UserInfo',
+          component:UserInfo
         }
       ]
     }
