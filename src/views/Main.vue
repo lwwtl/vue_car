@@ -104,41 +104,14 @@
                         "id": 22,
                         "parentId": 0,
                         "menuName": "用户管理",
-                        "url": "",
-                        "icon": "el-icon-setting",
+                        "url": "/userInfo",
+                        "icon": "el-icon-user",
                         "orderNum": 2,
                         "open": 1,
                         "disabled": false,
                         "perms": null,
                         "type": 0,
-                        "children": [
-                            {
-                                "id": 598,
-                                "parentId": 2,
-                                "menuName": "用户信息",
-                                "url": "/userInfo",
-                                "icon": "el-icon-user",
-                                "orderNum": 2,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": null,
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 599,
-                                "parentId": 2,
-                                "menuName": "黑名单管理",
-                                "url": "/heimingdang",
-                                "icon": "el-icon-user",
-                                "orderNum": 2,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": null,
-                                "type": 0,
-                                "children": []
-                            }
-                        ]
+                        "children": []
                     },
                     {
                         "id": 312,

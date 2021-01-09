@@ -5,7 +5,9 @@
         <div class="login_box">
         <!--头像-->
             <div class="avatar_box">
-                <img src="../assets/img/timg.gif" >
+                <div style=" margin: -10px;">
+                    <h2>汽车租赁后台管理系统</h2>
+                </div>
             </div>
         <!--表单-->
             <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label-width="0px" class="login_Form">
@@ -83,26 +85,30 @@
 <style lang="less" scoped>
     .login_container{
     height: 100%;
-    background-color:aquamarine ;
+    //background-color:aquamarine ;
+    background: url("../assets/img/bc1.jpg") no-repeat center center fixed;
+    background-size: cover;
     }
     .login_box{
         width: 450px;
         height: 380px;
-        background-color: #FFFFFF;
-        border-radius: 3px;
+        background-color:rgba(255, 255, 255, 0.8);
+        border-radius: 15px;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%,-50%);
     }
     .avatar_box{
-        width: 130px;
-        height: 130px;
+        width: 270px;
+        height: 50px;
         border: 1px solid #EEEEEE;
-        border-radius: 50%;
+        border-radius: 10px;
+        text-align: center;
+        color: #66b1ff;
         padding: 10px;
-        box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-        margin: -65px auto;
+        box-shadow: 10px 20px 12px 10px rgba(0,0,0,0.1);
+        margin: 35px auto;
         background-color: #FFFFFF;
         img{
             width: 100%;

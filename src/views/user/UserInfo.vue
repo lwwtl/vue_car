@@ -22,6 +22,12 @@
                 <el-form-item>
                     <el-button type="primary" icon="el-icon-plus" @click="dialogFormVisible=true">添加</el-button>
                 </el-form-item>
+                <div style="margin-left: 40px;margin-bottom: 20px">
+                    <el-button icon="el-icon-s-custom" type="primary" @click="searchAllUser">所有用户</el-button>
+                    <el-button icon="el-icon-s-custom" @click="searchNormalUser">白名单用户</el-button>
+                    <el-button icon="el-icon-s-custom" type="info" @click="searchBanUser">黑名单用户</el-button>
+                </div>
+
             </el-form>
             <!--添加对话框-->
             <el-dialog  title="添加用户" :visible.sync="dialogFormVisible" width="50%"  :before-close="handleClose" >
@@ -31,7 +37,7 @@
                          :inline="true"
                          class="demo-form-inline"
                          :rules=null
-
+                         :disabled="true"
                 >
                     <!--form-item需要添加prop属性，对应Model,否则清除表单无效-->
                     <el-form-item label="帐号" prop="account">
@@ -85,12 +91,28 @@
                 <el-table-column prop="name" label="姓名" ></el-table-column>
                 <el-table-column prop="gender" :formatter="showGender"  label="性别"></el-table-column>
                 <el-table-column prop="age" label="年龄" ></el-table-column>
-                <el-table-column prop="mobile" label="电话" ></el-table-column>
-                <el-table-column prop="address" label="住址" ></el-table-column>
+                <el-table-column prop="state" label="不良记录" >
+                    <template slot-scope="scope">
+                        <el-button size="small"  type="warning" v-if="scope.row.state =='0'">查看</el-button>
+                        <span v-if="scope.row.state =='1'">无</span>
+                    </template>
+                </el-table-column>
+<!--                <el-table-column prop="state" :formatter="showState"  label="账号状态"></el-table-column>-->
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
-                        <el-button size="small" type="primary" icon="el-icon-edit-outline" @click="find(scope.row.id)"></el-button>
-                        <el-button type="danger" size="small" icon="el-icon-delete" @click="del(scope.row.id)"></el-button>
+                        <el-button size="small"  type="primary" @click="find(scope.row.id)">用户信息</el-button>
+<!--                        <el-button size="small" type="primary" icon="el-icon-edit-outline"  @click="find(scope.row.id)"></el-button>-->
+<!--                        <el-button type="danger" size="small" icon="el-icon-delete"  @click="del(scope.row.id)"></el-button>-->
+                    </template>
+                </el-table-column>
+                <el-table-column label="封禁" v-if="userStateBlock == '1'">
+                    <template slot-scope="scope">
+                        <el-button type="danger" size="small" icon="el-icon-close" @click="changeUserState(scope.row.id)"></el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="解封" v-if="userStateBlock == '0'">
+                    <template slot-scope="scope">
+                        <el-button type="success" size="small" icon="el-icon-check" @click="changeUserState(scope.row.id)"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -124,6 +146,10 @@
                 currentPage: 1,
                 total: 0,
                 pageSize: 5,
+                /*用户状态*/
+                userState: '',
+                /*是否显示封禁*/
+                userStateBlock:'',
                 /*表格*/
                 userList: [],
                 /*添加对话框*/
@@ -187,17 +213,19 @@
             },
             page(currentPage) {
                 const _this = this
-                _this.$axios.post("/user/list?currentPage=" + currentPage+"&pageSize="+ this.pageSize,this.searchInCondition).then(res => {
+                _this.$axios.post("/user/list?currentPage=" + currentPage+"&pageSize=" + this.pageSize+ "&userState=" + this.userState,this.searchInCondition).then(res => {
                     console.log(res)
                     _this.userList = res.data.data.records
                     _this.currentPage = res.data.data.current
                     _this.total = res.data.data.total
                     _this.pageSize = res.data.data.size
-
                 })
             },
             showGender(row) {
                 return row.gender == 1 ? "男" : "女";
+            },
+            showState(row) {
+                return row.state == 1 ? "正常" : "封禁";
             },
             submitForm() {
                 const _this = this
@@ -252,6 +280,40 @@
                                 });
                             });
                         }
+                    })
+            },
+            //用户状态
+            searchBanUser(){
+                this.userState = 0;
+                this.userStateBlock = '0'
+                this.page(1)
+            },
+            searchNormalUser(){
+                this.userState = 1;
+                this.userStateBlock = '1'
+                this.page(1)
+            },
+            searchAllUser(){
+                this.userState = ''
+                this.userStateBlock = ''
+                this.page(1)
+            },
+            changeUserState(id){
+                console.log(id)
+                const _this = this
+                this.$confirm('确认改变账号状态？')
+                    .then(_ => {
+                            this.$axios.get('/user/changeUserState/' + id, {
+                                headers: {
+                                    "Authorization": localStorage.getItem("token")
+                                }
+                            }).then((res) => {
+                                _this.reload()
+                                this.$message({
+                                    message: '更改成功',
+                                    type: 'success'
+                                });
+                            });
                     })
             }
         },
