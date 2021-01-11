@@ -303,9 +303,10 @@
                             }
                         }).then((res) => {
                             _this.reload()
-                            this.$message({
-                                message: '操作成功',
-                                type: 'success'
+                            this.$notify({
+                                title: '操作成功',
+                                type: 'success',
+                                duration:2*1000
                             });
                         });
                     } else {
@@ -335,9 +336,10 @@
                             }
                         }).then((res) => {
                             _this.reload()
-                            this.$message({
-                                message: '删除成功',
-                                type: 'success'
+                            this.$notify({
+                                title: '删除成功',
+                                type: 'success',
+                                duration:2*1000
                             });
                         });
                     })

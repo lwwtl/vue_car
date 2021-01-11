@@ -21,11 +21,18 @@ axios.interceptors.response.use(response=>{
         return response
     }else {
         // 弹窗异常信息
-        Element.Message({
+        Element.Notification({
+            title: '错误',
             message: response.data.msg,
+            position: 'top-right',
             type: 'error',
             duration: 2 * 1000
-        })
+        });
+        // Element.Message({
+        //     message: response.data.msg,
+        //     type: 'error',
+        //     duration: 2 * 1000
+        // })
         return Promise.reject(response.data.msg)
     }
 },
@@ -45,10 +52,16 @@ axios.interceptors.response.use(response=>{
         if (error.response.status === 403) {
             error.message = '权限不足，无法访问';
         }
-        Element.Message({
-            message: error.message,
-            type: 'error',
-            duration: 3 * 1000
+        Element.Notification({
+            title: '错误',
+            message:error.message,
+            type:'error',
+            duration:3*1000
         })
+        // Element.Message({
+        //     message: error.message,
+        //     type: 'error',
+        //     duration: 3 * 1000
+        // })
         return Promise.reject(error)
     })

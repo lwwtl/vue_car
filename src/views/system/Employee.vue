@@ -208,9 +208,10 @@
                             }
                         }).then((res) => {
                             _this.reload()
-                            this.$message({
-                                message: '操作成功',
-                                type: 'success'
+                            this.$notify({
+                                title: '操作成功',
+                                type: 'success',
+                                duration:2*1000
                             });
                         });
                     } else {
@@ -234,9 +235,11 @@
                 this.$confirm('确认删除？')
                     .then(_ => {
                         if (this.$store.getters.getUser.id == id) {
-                            this.$message({
+                            this.$notify({
+                                title: '操作成功',
                                 message: '不能删除当前登录用户！',
-                                type: 'warning'
+                                type: 'warning',
+                                duration:2*1000
                             });
                         } else {
                             this.$axios.get('/employee/del/' + id, {
@@ -245,9 +248,10 @@
                                 }
                             }).then((res) => {
                                 _this.reload()
-                                this.$message({
-                                    message: '删除成功',
-                                    type: 'success'
+                                this.$notify({
+                                    title: '删除成功',
+                                    type: 'success',
+                                    duration:2*1000
                                 });
                             });
                         }

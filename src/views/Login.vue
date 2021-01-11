@@ -68,6 +68,12 @@
                             _this.$store.commit('SET_TOKEN', token)
                             _this.$store.commit('SET_USERINFO', res.data.data)
                             _this.$router.push("/main")
+                            this.$notify({
+                                title: '欢迎登录',
+                                message: this.$store.getters.getUser.name,
+                                type: 'success',
+                                duration:2*1000
+                            });
                         })
                     } else {
                         console.log('error submit!!');

@@ -91,13 +91,13 @@
                 <el-table-column prop="name" label="姓名" ></el-table-column>
                 <el-table-column prop="gender" :formatter="showGender"  label="性别"></el-table-column>
                 <el-table-column prop="age" label="年龄" ></el-table-column>
-                <el-table-column prop="state" label="不良记录" >
-                    <template slot-scope="scope">
-                        <el-button size="small"  type="warning" v-if="scope.row.state =='0'">查看</el-button>
-                        <span v-if="scope.row.state =='1'">无</span>
-                    </template>
-                </el-table-column>
-<!--                <el-table-column prop="state" :formatter="showState"  label="账号状态"></el-table-column>-->
+<!--                <el-table-column prop="state" label="不良记录" >-->
+<!--                    <template slot-scope="scope">-->
+<!--                        <el-button size="small"  type="warning" v-if="scope.row.state =='0'">查看</el-button>-->
+<!--                        <span v-if="scope.row.state =='1'">无</span>-->
+<!--                    </template>-->
+<!--                </el-table-column>-->
+                <el-table-column prop="state" :formatter="showState"  label="账号状态"></el-table-column>
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
                         <el-button size="small"  type="primary" @click="find(scope.row.id)">用户信息</el-button>
