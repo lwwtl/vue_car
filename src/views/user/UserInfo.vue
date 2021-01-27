@@ -19,9 +19,9 @@
                 <el-form-item>
                     <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
                 </el-form-item>
-                <el-form-item>
+                <!--<el-form-item>
                     <el-button type="primary" icon="el-icon-plus" @click="dialogFormVisible=true">添加</el-button>
-                </el-form-item>
+                </el-form-item>-->
                 <div style="margin-left: 40px;margin-bottom: 20px">
                     <el-button icon="el-icon-s-custom" type="primary" @click="searchAllUser">所有用户</el-button>
                     <el-button icon="el-icon-s-custom" @click="searchNormalUser">白名单用户</el-button>
@@ -29,8 +29,8 @@
                 </div>
 
             </el-form>
-            <!--添加对话框-->
-            <el-dialog  title="添加用户" :visible.sync="dialogFormVisible" width="50%"  :before-close="handleClose" >
+            <!--用户信息对话框-->
+            <el-dialog  title="用户信息" :visible.sync="dialogFormVisible" width="50%"  :before-close="handleClose" >
                 <el-form :model="editForm"
                          ref="editForm"
                          label-width="80px"
@@ -79,8 +79,8 @@
 
                 </el-form>
                 <div slot="footer" class="dialog-footer" style="text-align: center">
-                    <el-button @click="callOf()">取 消</el-button>
-                    <el-button type="primary" @click="submitForm()">确 定</el-button>
+                    <el-button @click="callOf()">关 闭</el-button>
+                    <!--<el-button type="primary" @click="submitForm()">确 定</el-button>-->
                 </div>
             </el-dialog>
             <!--表格显示-->
@@ -100,7 +100,7 @@
                 <el-table-column prop="state" :formatter="showState"  label="账号状态"></el-table-column>
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
-                        <el-button size="small"  type="primary" @click="find(scope.row.id)">用户信息</el-button>
+                        <el-button size="small"  type="primary" @click="findUser(scope.row.id)">用户信息</el-button>
 <!--                        <el-button size="small" type="primary" icon="el-icon-edit-outline"  @click="find(scope.row.id)"></el-button>-->
 <!--                        <el-button type="danger" size="small" icon="el-icon-delete"  @click="del(scope.row.id)"></el-button>-->
                     </template>
@@ -248,7 +248,7 @@
                     }
                 })
             },
-            find(id){
+            findUser(id){
                 console.log(id)
                 const _this = this
                 this.dialogFormVisible = true

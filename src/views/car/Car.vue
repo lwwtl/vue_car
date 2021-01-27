@@ -5,7 +5,7 @@
             <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>车辆管理</el-breadcrumb-item>
         </el-breadcrumb>
-        <!--用户列表卡片-->
+        <!--车辆列表卡片-->
         <el-card class="box-card">
             <el-form :inline="true" :model="searchInCondition" class="demo-form-inline">
                 <el-form-item label="车牌号">
@@ -44,8 +44,8 @@
                     <el-form-item label="名称" prop="name">
                         <el-input v-model="editForm.name" style="width: 150px" ></el-input>
                     </el-form-item>
-                    <el-form-item label="颜色" prop="color">
-                        <el-input v-model="editForm.color" style="width: 150px"></el-input>
+                    <el-form-item label="品牌" prop="brand">
+                        <el-input v-model="editForm.brand" style="width: 150px"></el-input>
                     </el-form-item>
                     <el-form-item label="价格" prop="price">
                         <el-input v-model="editForm.price" style="width: 150px" placeholder="单位：万元"></el-input>
@@ -64,8 +64,8 @@
                     </el-form-item>
                     <el-form-item label="变速" prop="model">
                         <div style="width: 178px">
-                            <el-radio v-model="editForm.model" label="手排">手排</el-radio>
-                            <el-radio v-model="editForm.model" label="自排">自排</el-radio>
+                            <el-radio v-model="editForm.model" label="手动挡">手动挡</el-radio>
+                            <el-radio v-model="editForm.model" label="自动挡">自动挡</el-radio>
                         </div>
                     </el-form-item>
                     <el-form-item label="类型" prop="type">
@@ -148,8 +148,8 @@
                             <el-form-item label="类 型">
                                 <span>{{ props.row.type }}</span>
                             </el-form-item>
-                            <el-form-item label="颜 色">
-                                <span>{{ props.row.color }}</span>
+                            <el-form-item label="品 牌">
+                                <span>{{ props.row.brand }}</span>
                             </el-form-item>
                             <el-form-item label="价 格">
                                 <span>{{ props.row.price }} 万元</span>
@@ -375,7 +375,7 @@
                     box: '',
                     output: '',
                     seat: '',
-                    color: '',
+                    brand: '',
                     price: '',
                     rent: '',
                     img:'',

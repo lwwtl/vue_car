@@ -28,7 +28,7 @@
                 <el-button type="primary" icon="el-icon-plus"  @click="dialogFormVisible=true">新增门店</el-button>
             </el-form>
             <!--添加对话框-->
-            <el-dialog  title="添加车辆" :visible.sync="dialogFormVisible" width="55%"  :before-close="handleClose" >
+            <el-dialog  title="添加门店" :visible.sync="dialogFormVisible" width="45%"  :before-close="handleClose" >
                 <el-form :model="storeForm"
                          ref="storeForm"
                          label-width="100px"
@@ -38,13 +38,38 @@
                 >
                     <!--form-item需要添加prop属性，对应Model,否则清除表单无效-->
                     <el-form-item label="门店名称" prop="name">
-                        <el-input v-model="storeForm.name" style="width: 200px;"></el-input>
+                        <el-input v-model="storeForm.name" style="width: 220px;padding-right: 200px"></el-input>
                     </el-form-item>
                     <el-form-item label="门店负责人" prop="admin">
-                        <el-input v-model="storeForm.admin" style="width: 200px;"></el-input>
+                        <el-input v-model="storeForm.admin" style="width: 220px;"></el-input>
                     </el-form-item>
                     <el-form-item label="联系电话" prop="tel">
-                        <el-input v-model="storeForm.tel" style="width: 200px;"></el-input>
+                        <el-input v-model="storeForm.tel" style="width: 220px;padding-right: 200px"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="营业时间" prop="open">
+                        <el-time-select
+                                placeholder="起始时间"
+                                v-model="storeForm.open"
+                                :picker-options="{
+                                  start: '08:00',
+                                  step: '00:15',
+                                  end: '10:30'
+                                }">
+                        </el-time-select>
+                    </el-form-item>
+
+                    <el-form-item  prop="close">
+                        <el-time-select
+                                placeholder="结束时间"
+                                v-model="storeForm.close"
+                                :picker-options="{
+                                  start: '17:00',
+                                  step: '00:15',
+                                  end: '22:30',
+                                  minTime: storeForm.open
+                                }">
+                        </el-time-select>
                     </el-form-item>
 
                     <el-form-item label="省市区" prop="address">
@@ -53,11 +78,11 @@
                                 :options="options"
                                 @change="handleChange"
                                 clearable
-                                style="width: 300px;"
+                                style="width: 450px"
                         ></el-cascader>
                     </el-form-item>
                     <el-form-item label="详细地址" prop="detail">
-                        <el-input v-model="storeForm.detail" style="width: 610px"></el-input>
+                        <el-input v-model="storeForm.detail" style="width: 450px"></el-input>
                     </el-form-item>
 
                 </el-form>
@@ -232,7 +257,9 @@
                     address:'',
                     admin:'',
                     tel:'',
-                    detail:''
+                    detail:'',
+                    open:'',
+                    close:''
                 },
                 // editFormRules: {
                 //     account: [
