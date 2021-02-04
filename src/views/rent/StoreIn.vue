@@ -5,7 +5,7 @@
             <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>业务管理</el-breadcrumb-item>
             <el-breadcrumb-item>租赁业务管理</el-breadcrumb-item>
-            <el-breadcrumb-item>订单管理</el-breadcrumb-item>
+            <el-breadcrumb-item>车辆出库</el-breadcrumb-item>
         </el-breadcrumb>
         <!--用户列表卡片-->
         <el-card class="box-card">
@@ -50,13 +50,15 @@
                         <el-button size="small" type="warning" @click="findCar(scope.row.carId)">查看</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="orderSource" label="出车门店"></el-table-column>
-                <el-table-column prop="orderDestination" label="还车门店"></el-table-column>
-                <el-table-column prop="orderRentDays" label="租期"></el-table-column>
-                <el-table-column prop="orderState" label="订单状态"></el-table-column>
                 <el-table-column label="订单详情" >
                     <template slot-scope="scope">
                         <el-button size="small" type="primary" @click="find(scope.row.orderId)">查看</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="orderState" label="订单状态"></el-table-column>
+                <el-table-column label="操作" >
+                    <template slot-scope="scope">
+                        <el-button size="small" type="success" @click="storeIn(scope.row.orderId)">入库</el-button>
                     </template>
                 </el-table-column>
 
@@ -229,9 +231,9 @@
                         <el-input v-model="editForm.store" style="width: 150px"></el-input>
                     </el-form-item>
                     <div>
-                    <el-form-item label="车辆图片" prop="img" >
-                        <img :src="editForm.img" style="width: 150px">
-                    </el-form-item>
+                        <el-form-item label="车辆图片" prop="img" >
+                            <img :src="editForm.img" style="width: 150px">
+                        </el-form-item>
                     </div>
                 </el-form>
                 <div slot="footer" class="dialog-footer" style="text-align: center">
@@ -255,14 +257,15 @@
 
 <script>
     export default {
-        name: "OrderDetail",
+        inject:['reload'],
+        name: "StoreIn",
         data() {
             return {
                 searchInCondition: {
                     id: '',
                     account:'',
                     cno: '',
-                    state:''
+                    state:'进行中'
                 },
                 /*订单表格*/
                 orderList:[],
@@ -368,12 +371,12 @@
                 console.log(`当前页: ${val}`);
             },
             tableRowClassName({row, rowIndex}) {
-                    if (rowIndex === 1) {
-                        return 'warning-row';
-                    } else if (rowIndex === 3) {
-                        return 'success-row';
-                    }
-                    return '';
+                if (rowIndex === 1) {
+                    return 'warning-row';
+                } else if (rowIndex === 3) {
+                    return 'success-row';
+                }
+                return '';
             },
             onSubmit() {
                 console.log('submit!');
@@ -414,6 +417,17 @@
                     _this.value_type = car.type.split(',')
                 });
             },
+            storeIn(id){
+                const _this = this
+                this.$axios.get('/order/storeIn/' + id).then((res) => {
+                    _this.reload()
+                    this.$notify({
+                        title: res.data.data,
+                        type: 'success',
+                        duration:2*1000
+                    });
+                });
+            }
         },
         created() {
             this.page(1)

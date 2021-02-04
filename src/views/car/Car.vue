@@ -53,8 +53,8 @@
                     <el-form-item label="租金" prop="rent">
                         <el-input v-model="editForm.rent" style="width: 150px" placeholder="单位：元"></el-input>
                     </el-form-item>
-                    <el-form-item label="排量" prop="output">
-                        <el-input v-model="editForm.output" style="width: 150px"></el-input>
+                    <el-form-item label="车辆押金" prop="deposit">
+                        <el-input v-model="editForm.deposit" style="width: 150px" placeholder="单位：元"></el-input>
                     </el-form-item>
                     <el-form-item label="车厢" prop="box">
                         <el-input v-model="editForm.box" style="width: 150px"></el-input>
@@ -62,12 +62,10 @@
                     <el-form-item label="座位" prop="seat">
                         <el-input v-model="editForm.seat" style="width: 150px"></el-input>
                     </el-form-item>
-                    <el-form-item label="变速" prop="model">
-                        <div style="width: 178px">
-                            <el-radio v-model="editForm.model" label="手动挡">手动挡</el-radio>
-                            <el-radio v-model="editForm.model" label="自动挡">自动挡</el-radio>
-                        </div>
+                    <el-form-item label="排量" prop="output">
+                        <el-input v-model="editForm.output" style="width: 150px"></el-input>
                     </el-form-item>
+
                     <el-form-item label="类型" prop="type">
                         <el-select
                                 v-model="value_type"
@@ -87,10 +85,11 @@
                         </el-select>
                     </el-form-item>
 
-                    <el-form-item label="车辆状态" prop="state">
-                        <div style="width: 180px">
-                            <el-radio v-model="editForm.state" label="已出库">已出库</el-radio>
-                            <el-radio v-model="editForm.state" label="已入库">已入库</el-radio>
+
+                    <el-form-item label="变速" prop="model">
+                        <div style="width: 178px">
+                            <el-radio v-model="editForm.model" label="手动挡">手动挡</el-radio>
+                            <el-radio v-model="editForm.model" label="自动挡">自动挡</el-radio>
                         </div>
                     </el-form-item>
 <!--                    <el-form-item label="所属门店" prop="store">-->
@@ -105,6 +104,12 @@
                                 clearable
                                 style="width: 390px"
                         ></el-cascader>
+                        </el-form-item>
+                        <el-form-item label="车辆状态" prop="state">
+                            <div style="width: 180px">
+                                <el-radio v-model="editForm.state" label="已出库">已出库</el-radio>
+                                <el-radio v-model="editForm.state" label="已入库">已入库</el-radio>
+                            </div>
                         </el-form-item>
                     </div>
                     <el-form-item label="所属门店" prop="store">
@@ -145,11 +150,12 @@
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="类 型">
-                                <span>{{ props.row.type }}</span>
-                            </el-form-item>
+
                             <el-form-item label="品 牌">
                                 <span>{{ props.row.brand }}</span>
+                            </el-form-item>
+                            <el-form-item label="类 型">
+                                <span>{{ props.row.type }}</span>
                             </el-form-item>
                             <el-form-item label="价 格">
                                 <span>{{ props.row.price }} 万元</span>
@@ -168,6 +174,9 @@
                             </el-form-item>
                             <el-form-item label="座 位">
                                 <span>{{ props.row.seat }} 座</span>
+                            </el-form-item>
+                            <el-form-item label="押 金">
+                                <span>{{ props.row.deposit }} 元</span>
                             </el-form-item>
                             <el-form-item label="省市区">
                                 <span>{{ props.row.region }}</span>
@@ -381,7 +390,8 @@
                     img:'',
                     state: '',
                     store: '',
-                    region:''
+                    region:'',
+                    deposit:''
                 },
                 // editFormRules: {
                 //     account: [

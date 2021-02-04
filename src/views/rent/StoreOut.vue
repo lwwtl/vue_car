@@ -5,7 +5,7 @@
             <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>业务管理</el-breadcrumb-item>
             <el-breadcrumb-item>租赁业务管理</el-breadcrumb-item>
-            <el-breadcrumb-item>订单管理</el-breadcrumb-item>
+            <el-breadcrumb-item>车辆出库</el-breadcrumb-item>
         </el-breadcrumb>
         <!--用户列表卡片-->
         <el-card class="box-card">
@@ -27,8 +27,7 @@
 
             <el-table
                     :data="orderList"
-                    style="width: 100%;height:100%"
-                    :row-class-name="tableRowClassName">
+                    style="width: 100%;height:100%">
                 <el-table-column  label="订单编号">
                     <template slot-scope="scope">
                         <el-popover trigger="hover" placement="top">
@@ -50,13 +49,15 @@
                         <el-button size="small" type="warning" @click="findCar(scope.row.carId)">查看</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="orderSource" label="出车门店"></el-table-column>
-                <el-table-column prop="orderDestination" label="还车门店"></el-table-column>
-                <el-table-column prop="orderRentDays" label="租期"></el-table-column>
-                <el-table-column prop="orderState" label="订单状态"></el-table-column>
                 <el-table-column label="订单详情" >
                     <template slot-scope="scope">
                         <el-button size="small" type="primary" @click="find(scope.row.orderId)">查看</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="orderState" label="订单状态"></el-table-column>
+                <el-table-column label="操作" >
+                    <template slot-scope="scope">
+                        <el-button size="small" type="danger" @click="storeOut(scope.row.orderId)">出库</el-button>
                     </template>
                 </el-table-column>
 
@@ -229,9 +230,9 @@
                         <el-input v-model="editForm.store" style="width: 150px"></el-input>
                     </el-form-item>
                     <div>
-                    <el-form-item label="车辆图片" prop="img" >
-                        <img :src="editForm.img" style="width: 150px">
-                    </el-form-item>
+                        <el-form-item label="车辆图片" prop="img" >
+                            <img :src="editForm.img" style="width: 150px">
+                        </el-form-item>
                     </div>
                 </el-form>
                 <div slot="footer" class="dialog-footer" style="text-align: center">
@@ -255,14 +256,15 @@
 
 <script>
     export default {
-        name: "OrderDetail",
+        inject:['reload'],
+        name: "StoreOut",
         data() {
             return {
                 searchInCondition: {
                     id: '',
                     account:'',
                     cno: '',
-                    state:''
+                    state:'待取车'
                 },
                 /*订单表格*/
                 orderList:[],
@@ -367,14 +369,7 @@
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
             },
-            tableRowClassName({row, rowIndex}) {
-                    if (rowIndex === 1) {
-                        return 'warning-row';
-                    } else if (rowIndex === 3) {
-                        return 'success-row';
-                    }
-                    return '';
-            },
+
             onSubmit() {
                 console.log('submit!');
                 this.page(this.currentPage);
@@ -414,6 +409,17 @@
                     _this.value_type = car.type.split(',')
                 });
             },
+            storeOut(id){
+                const _this = this
+                this.$axios.get('/order/storeOut/' + id).then((res) => {
+                    _this.reload()
+                    this.$notify({
+                        title: res.data.data,
+                        type: 'success',
+                        duration:2*1000
+                    });
+                });
+            }
         },
         created() {
             this.page(1)
