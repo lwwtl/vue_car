@@ -13,38 +13,47 @@
                 <el-form-item label="订单编号">
                     <el-input clearable v-model="searchInCondition.orderId" placeholder="请输入订单编号"></el-input>
                 </el-form-item>
+                <el-form-item label="车牌号">
+                    <el-input clearable v-model="searchInCondition.carNo" placeholder="请输入车牌号"></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
                 </el-form-item>
                 <div style="margin-left: 68px;margin-bottom: 20px">
-                    <el-button icon="el-icon-bell" type="danger" @click="todo">待处理</el-button>
-                    <el-button icon="el-icon-tickets" type="primary" @click="allList">维修记录</el-button>
+                    <el-button icon="el-icon-bell" :type="todoActive" @click="todo">待处理</el-button>
+                    <el-button icon="el-icon-tickets" :type="recordActive" @click="allList">维修记录</el-button>
                 </div>
             </el-form>
             <!--表格显示-->
 
             <el-table
                     :data="repairList"
+                    empty-text="暂无待处理订单"
                     style="width: 100%;height:100%">
                 <el-table-column prop="orderId" label="订单编号"></el-table-column>
-                <el-table-column  label="车辆编号" align="center">
+                <el-table-column prop="carNo" label="车牌号" align="center"></el-table-column>
+                <el-table-column  label="是否受损" align="center" >
                     <template slot-scope="scope">
-                        <el-popover trigger="hover" placement="top">
-                            <p>维修部位: {{ scope.row.repairPart }}</p>
-                            <p>受损情况: {{ scope.row.repairDetail }}</p>
-                            <div slot="reference" class="name-wrapper">
-                                <el-tag size="large">{{ scope.row.carId }}</el-tag>
+                        <el-popover trigger="hover" placement="left">
+                            <p v-if="scope.row.repairIf == 1">维修部位: {{ scope.row.repairPart }}</p>
+                            <p v-if="scope.row.repairIf == 1">受损情况: {{ scope.row.repairDetail }}</p>
+                            <p v-if="scope.row.repairIf == 0">无受损</p>
+                            <div slot="reference" class="name-wrapper" >
+                                <el-tag size="large" v-if="scope.row.repairIf == 1">是</el-tag>
+                                <el-tag size="large" v-if="scope.row.repairIf == 0">否</el-tag>
                             </div>
                         </el-popover>
                     </template>
                 </el-table-column>
-                <el-table-column prop="repairIf" label="是否受损" align="center"  :formatter="showRepair"></el-table-column>
                 <el-table-column prop="repairCost" label="维修费用" align="center"></el-table-column>
                 <el-table-column prop="repairCreate" label="创建时间"></el-table-column>
                 <el-table-column prop="repairRecorder" label="登记人员"></el-table-column>
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
-                        <el-button size="small" type="danger"  @click="record(scope.row.repairId,scope.row.orderId,scope.row.carId)">登记</el-button>
+                        <el-button size="small" type="danger"  v-if="scope.row.repairRecorder==null"
+                                   @click="record(scope.row.repairId,scope.row.orderId,scope.row.carId)">登记</el-button>
+                        <el-button size="small" type="primary"  v-if="scope.row.repairRecorder!=null"
+                                   @click="find(scope.row.orderId)">查看</el-button>
                     </template>
                 </el-table-column>
 
@@ -55,7 +64,7 @@
                 <el-form :model="repairForm"
                          ref="repairForm"
                          label-width="80px"
-
+                         :disabled="findFlag"
                          class="demo-form-inline"
                          :rules=null
                 >
@@ -89,7 +98,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer" style="text-align: center">
-                    <el-button @click="submitForm()">提 交</el-button>
+                    <el-button  v-if="!findFlag" @click="submitForm()">提 交</el-button>
                 </div>
             </el-dialog>
             <!--分页区域-->
@@ -114,14 +123,15 @@
         data() {
             return {
                 searchInCondition: {
-                    repairId: '',
                     orderId:'',
-                    carId: '',
-                    repairRecorder:''
+                    carNo: '',
+                    repairRecorder:'',
+                    repairId: '',
                 },
                 dialogFormVisible:false,
                 repairList:[],
                 /*分页参数*/
+                pageNum:1,
                 currentPage: 1,
                 total: 0,
                 pageSize: 5,
@@ -135,7 +145,11 @@
                     repairCost:'',
                     repairCreate:'',
                     repairRecorder:''
-                }
+                },
+                todoActive:'danger',
+                recordActive:'',
+                findFlag:false
+
 
             }
         },
@@ -149,9 +163,6 @@
                 this.pageSize=val;
                 this.page(this.currentPage);
             },
-            showRepair(row) {
-                return row.repairIf == 1 ? "是" : "否";
-            },
             onSubmit() {
                 console.log('submit!');
                 this.page(this.currentPage);
@@ -159,17 +170,27 @@
             page(currentPage) {
                 const _this = this
                 _this.$axios.post("/repair/list?currentPage=" + currentPage + "&pageSize=" + this.pageSize, this.searchInCondition).then(res => {
-                    _this.repairList = res.data.data.records
-                    _this.currentPage = res.data.data.current
+                    _this.repairList = res.data.data.list
+                    _this.currentPage = res.data.data.pageNum
                     _this.total = res.data.data.total
-                    _this.pageSize = res.data.data.size
+                    _this.pageSize = res.data.data.pageSize
                 })
             },
             record(id,order,car){
+                this.findFlag = false
                 this.dialogFormVisible = true;
                 this.repairForm.repairId = id
                 this.repairForm.orderId = order
                 this.repairForm.carId = car
+            },
+            find(id){
+                this.findFlag = true
+                const _this = this
+                this.dialogFormVisible = true
+                this.$axios.get('/repair/find/' + id).then((res) => {
+                    const emp = res.data.data
+                    _this.repairForm = emp
+                });
             },
             submitForm() {
                 if (this.$store.getters.getUser.name) {
@@ -183,17 +204,23 @@
                 }).then((res) => {
                     _this.reload()
                     this.$notify({
-                        title: res.data.data,
+                        title: "操作成功",
                         type: 'success',
                         duration: 2 * 1000
                     });
                 });
             },
             todo(){
-
+                this.recordActive = ''
+                this.todoActive = 'danger'
+                this.searchInCondition.repairRecorder = ''
+                this.page(this.currentPage);
             },
             allList(){
-
+                this.todoActive = ''
+                this.recordActive = 'primary'
+                this.searchInCondition.repairRecorder = '有'
+                this.page(this.currentPage);
             }
         },
         created() {
