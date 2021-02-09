@@ -11,6 +11,7 @@ import StoreOut from "../views/rent/StoreOut";
 import StoreIn from "../views/rent/StoreIn";
 import Repair from "../views/carService/Repair";
 import Violations from "../views/carService/Violations";
+import Index from "../views/Index";
 
 Vue.use(VueRouter)
 
@@ -66,6 +67,10 @@ const router = new VueRouter({
           path: '/violations',
           name: 'Violations',
           component: Violations
+        },{
+          path: '/index',
+          name: 'Index',
+          component: Index
         },
       ]
     }

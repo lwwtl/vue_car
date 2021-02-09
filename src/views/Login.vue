@@ -67,7 +67,7 @@
                             const token = res.headers['authorization']
                             _this.$store.commit('SET_TOKEN', token)
                             _this.$store.commit('SET_USERINFO', res.data.data)
-                            _this.$router.push("/main")
+                            _this.$router.push("/index")
                             this.$notify({
                                 title: '欢迎登录',
                                 message: this.$store.getters.getUser.name,

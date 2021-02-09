@@ -8,8 +8,9 @@ import axios from 'axios'
 import './axios'
 import './axios.js' // 请求拦截
 import './permission.js' // 路由拦截
+import echarts from 'echarts'
 
-
+Vue.prototype.$echarts = echarts
 Vue.prototype.$axios = axios //
 Vue.config.productionTip = false
 

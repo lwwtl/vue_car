@@ -26,7 +26,7 @@
                     <i :class="isCollapse?'el-icon-arrow-right':'el-icon-arrow-left'"></i>
                 </div>
                 <el-menu
-                        default-active="2"
+                        default-active="0"
                         class="el-menu-vertical-demo"
                         :collapse="isCollapse"
                         :collapse-transition="false"
@@ -52,14 +52,27 @@
         name: "Main",
         data(){
             return{
-                isCollapse:true,
-                activePath:'',
+                isCollapse:false,
+                activePath:'/index',
                 user:{
                     name:'',
                     role:''
                 },
                 hasLogin:false,
                 menuList:[
+                    {
+                        "id": 0,
+                        "parentId": 0,
+                        "menuName": "首页",
+                        "url": "/index",
+                        "icon": "el-icon-setting",
+                        "orderNum": 0,
+                        "open": 0,
+                        "disabled": false,
+                        "perms": null,
+                        "type": 0,
+                        "children": []
+                    },
                     {
                         "id": 1,
                         "parentId": 0,

@@ -84,6 +84,12 @@
                     <el-form-item label="详细地址" prop="detail">
                         <el-input v-model="storeForm.detail" style="width: 450px"></el-input>
                     </el-form-item>
+                    <el-form-item label="经度" prop="longitude">
+                        <el-input v-model="storeForm.longitude"></el-input>
+                    </el-form-item>
+                    <el-form-item label="纬度" prop="latitude">
+                        <el-input v-model="storeForm.latitude"></el-input>
+                    </el-form-item>
 
                 </el-form>
                 <div slot="footer" class="dialog-footer" style="text-align: center">
@@ -259,7 +265,9 @@
                     tel:'',
                     detail:'',
                     open:'',
-                    close:''
+                    close:'',
+                    longitude:'',
+                    latitude:'',
                 },
                 // editFormRules: {
                 //     account: [
