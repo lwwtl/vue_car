@@ -65,7 +65,7 @@
                         "parentId": 0,
                         "menuName": "首页",
                         "url": "/index",
-                        "icon": "el-icon-setting",
+                        "icon": "el-icon-s-home",
                         "orderNum": 0,
                         "open": 0,
                         "disabled": false,
@@ -103,7 +103,7 @@
                                 "parentId": 1,
                                 "menuName": "门店管理",
                                 "url": "/store",
-                                "icon": "el-icon-user",
+                                "icon": "el-icon-s-shop",
                                 "orderNum": 2,
                                 "open": 0,
                                 "disabled": false,
@@ -126,24 +126,12 @@
                         "type": 0,
                         "children": []
                     },
-                    {
-                        "id": 312,
-                        "parentId": 0,
-                        "menuName": "业务管理",
-                        "url": null,
-                        "icon": "el-icon-s-goods",
-                        "orderNum": 3,
-                        "open": 1,
-                        "disabled": false,
-                        "perms": null,
-                        "type": 0,
-                        "children": [
                             {
                                 "id": 229,
                                 "parentId": 312,
                                 "menuName": "租赁业务管理",
                                 "url": "",
-                                "icon": "el-icon-date",
+                                "icon": "el-icon-menu",
                                 "orderNum": 1,
                                 "open": 1,
                                 "disabled": false,
@@ -155,7 +143,7 @@
                                         "parentId": 229,
                                         "menuName": "订单管理",
                                         "url": "/orderDetail",
-                                        "icon": "el-icon-date",
+                                        "icon": "el-icon-s-order",
                                         "orderNum": 1,
                                         "open": 0,
                                         "disabled": false,
@@ -168,7 +156,7 @@
                                         "parentId": 229,
                                         "menuName": "车辆出库",
                                         "url": "/storeOut",
-                                        "icon": "el-icon-goods",
+                                        "icon": "el-icon-document-remove",
                                         "orderNum": 5,
                                         "open": 0,
                                         "disabled": false,
@@ -181,7 +169,7 @@
                                         "parentId": 229,
                                         "menuName": "车辆入库",
                                         "url": "/storeIn",
-                                        "icon": "el-icon-star-off",
+                                        "icon": "el-icon-document-add",
                                         "orderNum": 2,
                                         "open": 0,
                                         "disabled": false,
@@ -196,7 +184,7 @@
                                 "parentId": 312,
                                 "menuName": "车辆服务管理",
                                 "url": null,
-                                "icon": "el-icon-edit",
+                                "icon": "el-icon-menu",
                                 "orderNum": 4,
                                 "open": 1,
                                 "disabled": false,
@@ -231,101 +219,22 @@
                                     }
                                 ]
                             }
-                        ]
-                    },
+                     ,
                     {
                         "id": 303,
                         "parentId": 0,
                         "menuName": "车辆管理",
                         "url": "/car",
-                        "icon": "el-icon-platform-eleme",
+                        "icon": "el-icon-truck",
                         "orderNum": 5,
                         "open": 0,
                         "disabled": false,
                         "perms": "",
                         "type": 0,
                         "children": []
-                    },
-                    {
-                        "id": 295,
-                        "parentId": 0,
-                        "menuName": "财务管理",
-                        "url": "",
-                        "icon": "el-icon-s-marketing",
-                        "orderNum": 6,
-                        "open": 1,
-                        "disabled": false,
-                        "perms": "",
-                        "type": 0,
-                        "children": [
-                            {
-                                "id": 341,
-                                "parentId": 295,
-                                "menuName": "账单管理",
-                                "url": "/blog",
-                                "icon": "el-icon-view",
-                                "orderNum": 1,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": "",
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 296,
-                                "parentId": 295,
-                                "menuName": "发票开具",
-                                "url": "/swagger",
-                                "icon": "el-icon-document",
-                                "orderNum": 2,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": null,
-                                "type": 0,
-                                "children": []
-                            }
-                        ]
-                    },
-                    {
-                        "id": 5,
-                        "parentId": 0,
-                        "menuName": "日志管理",
-                        "url": "/logs",
-                        "icon": "el-icon-camera",
-                        "orderNum": 7,
-                        "open": 1,
-                        "disabled": false,
-                        "perms": null,
-                        "type": 0,
-                        "children": [
-                            {
-                                "id": 271,
-                                "parentId": 5,
-                                "menuName": "登入日志",
-                                "url": "/loginLog",
-                                "icon": "el-icon-date",
-                                "orderNum": 1,
-                                "open": 0,
-                                "disabled": false,
-                                "perms": "login:log",
-                                "type": 0,
-                                "children": []
-                            },
-                            {
-                                "id": 307,
-                                "parentId": 5,
-                                "menuName": "操作日志",
-                                "url": "/logs",
-                                "icon": "el-icon-edit",
-                                "orderNum": 1,
-                                "open": 1,
-                                "disabled": false,
-                                "perms": "",
-                                "type": 0,
-                                "children": []
-                            }
-                        ]
                     }
+
+
                 ]
             }
         },
@@ -353,7 +262,7 @@
                 this.hasLogin = true
             }
             if(this.user.role == 'e'){
-                this.menuList[0].disabled=true;
+                this.menuList[1].disabled=true;
             }
 
         }

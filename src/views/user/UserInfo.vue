@@ -83,6 +83,46 @@
                     <!--<el-button type="primary" @click="submitForm()">确 定</el-button>-->
                 </div>
             </el-dialog>
+            <!--用户违章记录对话框-->
+            <el-dialog  title="违章记录" :visible.sync="dialogFormViolations" width="50%"  >
+                <el-table
+                        :data="violationsList"
+                        empty-text="该用户目前没有违章记录。"
+                        style="width: 100%;min-height: 388px">
+                    <el-table-column type="expand">
+                        <template slot-scope="props">
+                            <el-form label-position="left"  class="demo-table-expand">
+
+                                <el-form-item label="违章时间:" style="margin-bottom: 0">
+                                    <span>{{ props.row.violationsTime }}</span>
+                                </el-form-item>
+                                <el-form-item label="违章地点:"  style="margin-bottom: 0">
+                                    <span>{{ props.row.violationsSite }}</span>
+                                </el-form-item>
+                                <el-form-item label="违章详情:"  style="margin-bottom: 0">
+                                    <span>{{ props.row.violationsDetail }}</span>
+                                </el-form-item>
+                            </el-form>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="订单编号" prop="orderId"></el-table-column>
+                    <el-table-column label="车辆型号" prop="carName"></el-table-column>
+                    <el-table-column label="处罚金额" prop="violationsCost"></el-table-column>
+
+                </el-table>
+                <!--分页区域-->
+                <el-pagination
+                        style="padding-top: 30px;"
+                        @current-change="findUserRecord"
+                        :current-page=violationsPage
+                        :page-size=vioSize
+                        layout="prev, pager, next, jumper"
+                        :total="vioTotal"
+                        v-if="violationsList != ''"
+                >
+                </el-pagination>
+            </el-dialog>
             <!--表格显示-->
             <el-table
                     :data="userList"
@@ -98,6 +138,11 @@
 <!--                    </template>-->
 <!--                </el-table-column>-->
                 <el-table-column prop="state" :formatter="showState"  label="账号状态"></el-table-column>
+                <el-table-column label="违章记录" >
+                    <template slot-scope="scope">
+                        <el-button size="small" type="warning" @click="ViolationsId(scope.row.id)">违章详情</el-button>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
                         <el-button size="small"  type="primary" @click="findUser(scope.row.id)">用户信息</el-button>
@@ -154,6 +199,7 @@
                 userList: [],
                 /*添加对话框*/
                 dialogFormVisible: false,
+                dialogFormViolations: false,
                 editForm: {
                     id:'',
                     account: '',
@@ -168,6 +214,13 @@
                     state:'',
                     address: ''
                 },
+                /*违章分页*/
+                violationsPage:1,
+                vioTotal:0,
+                vioSize:6,
+                /*违章记录*/
+                violationsList:[],
+                uid:''
                 // editFormRules: {
                 //     account: [
                 //         { required: true, message: "不能为空", trigger: "blur" },
@@ -316,7 +369,21 @@
                                 });
                             });
                     })
-            }
+            },
+            ViolationsId(id){
+                this.uid = id
+                this.dialogFormViolations = true
+                this.findUserRecord(1)
+            },
+            /*违章记录*/
+            findUserRecord(violationsPage){
+                const _this = this
+                _this.$axios.get("/violations/myViolationsList/" + this.uid +"?currentPage=" + violationsPage + "&pageSize=" + this.vioSize).then(res => {
+                    _this.violationsList = res.data.data.list
+                    _this.violationsPage = res.data.data.current
+                    _this.vioTotal = res.data.data.total
+                })
+            },
         },
         created() {
             this.page(1)

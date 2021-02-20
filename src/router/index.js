@@ -29,47 +29,80 @@ const router = new VueRouter({
     },
     { path: '/main',
       name:'Main',
+      meta: {
+        requireAuth: true
+      },
       component:Main,
       children:[
         {
           path:'/employee',
           name:'Employee',
+          meta: {
+            requireAuth: true
+          },
           component:Employee
         },{
           path:'/store',
           name:'Store',
+          meta: {
+            requireAuth: true
+          },
           component:Store
         },{
           path:'/orderDetail',
           name:'OrderDetail',
+          meta: {
+            requireAuth: true
+          },
           component:OrderDetail
         },{
           path:'/car',
           name:'Car',
+          meta: {
+            requireAuth: true
+          },
           component:Car
         },{
           path:'/userInfo',
           name:'UserInfo',
+          meta: {
+            requireAuth: true
+          },
           component:UserInfo
         },{
           path: '/storeOut',
           name: 'StoreOut',
+          meta: {
+            requireAuth: true
+          },
           component: StoreOut
         },{
           path: '/storeIn',
           name: 'StoreIn',
+          meta: {
+            requireAuth: true
+          },
           component: StoreIn
         },{
           path: '/repair',
           name: 'Repair',
+          meta: {
+            requireAuth: true
+          },
           component: Repair
         },{
           path: '/violations',
           name: 'Violations',
+          meta: {
+            requireAuth: true
+          },
           component: Violations
         },{
           path: '/index',
           name: 'Index',
+          meta: {
+            requireAuth: true
+          },
           component: Index
         },
       ]
