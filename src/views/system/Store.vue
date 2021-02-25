@@ -2,7 +2,7 @@
     <div>
         <!--面包屑-->
         <el-breadcrumb separator="/" style="padding-left: 10px;padding-bottom: 10px;font-size: 13px">
-            <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>系统管理</el-breadcrumb-item>
             <el-breadcrumb-item>门店管理</el-breadcrumb-item>
         </el-breadcrumb>
@@ -101,7 +101,18 @@
             <el-table
                     :data="storeList"
                     style="width: 100%;height: 100%">
-                <el-table-column prop="name" label="门店名称" ></el-table-column>
+                <el-table-column  label="门店名称">
+                    <template slot-scope="scope">
+                        <el-popover trigger="hover" placement="top">
+                            <p>营业时间: {{ scope.row.open }}——{{ scope.row.close }}</p>
+                            <p>经度: {{ scope.row.longitude }}</p>
+                            <p>纬度: {{ scope.row.latitude}}</p>
+                            <div slot="reference" class="name-wrapper">
+                                <el-tag size="large">{{ scope.row.name }}</el-tag>
+                            </div>
+                        </el-popover>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="admin" label="负责人" ></el-table-column>
                 <el-table-column prop="tel" label="联系电话" ></el-table-column>
                 <el-table-column prop="address" label="省市区" ></el-table-column>

@@ -2,9 +2,9 @@
     <div>
         <!--面包屑-->
         <el-breadcrumb separator="/" style="padding-left: 10px;padding-bottom: 10px;font-size: 13px">
-            <el-breadcrumb-item :to="{ path: '/main' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-            <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+            <el-breadcrumb-item>员工管理</el-breadcrumb-item>
         </el-breadcrumb>
         <!--用户列表卡片-->
         <el-card class="box-card">
@@ -85,7 +85,7 @@
                 <el-table-column prop="age" label="年龄" ></el-table-column>
                 <el-table-column prop="mobile" label="电话" ></el-table-column>
                 <el-table-column prop="address" label="住址" ></el-table-column>
-                <el-table-column prop="lastTime" label="上次登录" ></el-table-column>
+                <el-table-column prop="lastTime" label="上次登录" width="200px"></el-table-column>
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
                         <el-button size="small" type="primary" icon="el-icon-edit-outline" @click="find(scope.row.id)"></el-button>

@@ -6,7 +6,7 @@
         <!--头像-->
             <div class="avatar_box">
                 <div style=" margin: -10px;">
-                    <h2>汽车租赁后台管理系统</h2>
+                    <h2>汽车租赁后台管理</h2>
                 </div>
             </div>
         <!--表单-->

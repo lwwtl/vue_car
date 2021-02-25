@@ -43,11 +43,11 @@ axios.interceptors.response.use(response=>{
         }
         // 根据请求状态觉得是否登录或者提示其他
         if (error.response.status === 401) {
-            store.commit('REMOVE_INFO');
-            router.push({
-                path: '/login'
-            });
-            error.message = '请重新登录';
+            // store.commit('REMOVE_INFO');
+            // router.push({
+            //     path: '/login'
+            // });
+            error.message = '权限不足，无法操作';
         }
         if (error.response.status === 403) {
             error.message = '权限不足，无法访问';
